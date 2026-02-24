@@ -1281,5 +1281,13 @@ window.addEventListener('load', () => { initTwin('twinCanvas'); });
 
 <!-- ADDED FOR GOOGLE FORM -->
 <iframe name="hidden_iframe" style="display:none;"></iframe>
+<script>
+  document.querySelectorAll('form.hero-form').forEach(function(form) {
+    form.addEventListener('submit', function() {
+      setTimeout(function() { form.reset(); }, 100);
+    });
+  });
+</script>
+  
 </body>
 </html>
