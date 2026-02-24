@@ -469,6 +469,1252 @@ body {
   .s-twin { grid-template-columns: 1fr; }
   .twin-canvas-wrap { height: 300px; }
   .hero-headline { font-size: clamp(3.2rem, 12vw, 5rem); }
+  .hero-bottom { flex-direction: column; align-items: flex-start; gap: 1.6rem; }
+  .hero-sub { font-size: 1rem; max-width: 100%; }
+  .hero-form-wrap { align-items: flex-start; width: 100%; }
+  .hero-form { width: 100%; }
+  .hero-input { flex: 1; width: auto; min-width: 0; }
+  .hero-btn { font-size: 0.62rem; padding: 0.94rem 1rem; }
+}
+
+/* ══════════════════════════════════════════
+   DEMO COMPONENT STYLES
+   ══════════════════════════════════════════ */
+.dc-browser {
+  width: 100%;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.13), 0 4px 16px rgba(0,0,0,0.06);
+  background: #fff;
+  position: relative;
+}
+
+.dc-bar {
+  background: #f0f0f0;
+  padding: 0.65rem 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  border-bottom: 1px solid #ddd;
+}
+
+.dc-dots { display: flex; gap: 0.35rem; }
+.dc-dot { width: 9px; height: 9px; border-radius: 50%; }
+.dc-dot-r { background: #ff5f57; }
+.dc-dot-a { background: #ffbd2e; }
+.dc-dot-g { background: #28c840; }
+
+.dc-url {
+  flex: 1;
+  background: #fff;
+  border-radius: 5px;
+  padding: 0.24rem 0.7rem;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.58rem;
+  color: #9a9a9a;
+}
+
+.dc-ella-tab {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: #ddeef5;
+  border: 1px solid #8ab8cc;
+  border-radius: 7px;
+  padding: 0.26rem 0.7rem;
+  cursor: pointer;
+  font-size: 0.64rem;
+  font-weight: 500;
+  color: #4a8fa8;
+  white-space: nowrap;
+  transition: all 0.2s;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.dc-ella-tab:hover { background: #8ab8cc; color: white; border-color: #8ab8cc; }
+
+.dc-product {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  position: relative;
+  min-height: 460px;
+}
+
+.dc-store-nav {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 1.8rem;
+  border-bottom: 1px solid #e2e2e2;
+}
+
+.dc-store-name {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: #1a1a1a;
+}
+
+.dc-store-links { display: flex; gap: 1.4rem; }
+
+.dc-store-links a {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.52rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #9a9a9a;
+  text-decoration: none;
+}
+
+.dc-img-panel {
+  background: #edeae4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 460px;
+}
+
+.dc-img-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 0.45;
+}
+
+.dc-garment-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.5rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #6a6055;
+}
+
+.dc-info-panel {
+  padding: 1.8rem 1.8rem;
+  border-left: 1px solid #e2e2e2;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.dc-product-brand {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.5rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #9a9a9a;
+  margin-bottom: 0.4rem;
+}
+
+.dc-product-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.5rem;
+  font-weight: 300;
+  line-height: 1.15;
+  margin-bottom: 0.4rem;
+}
+
+.dc-product-price { font-size: 0.82rem; color: #5a5a5a; margin-bottom: 1.2rem; }
+.dc-rule { height: 1px; background: #e2e2e2; margin-bottom: 1rem; }
+
+.dc-colour-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.5rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #9a9a9a;
+  margin-bottom: 0.5rem;
+}
+
+.dc-swatches { display: flex; gap: 0.4rem; margin-bottom: 1.2rem; }
+.dc-swatch { width: 18px; height: 18px; border-radius: 50%; cursor: pointer; }
+.dc-swatch.dc-active { outline: 1px solid #1a1a1a; outline-offset: 2px; }
+
+.dc-size-guide {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.5rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #9a9a9a;
+  text-decoration: underline;
+  margin-bottom: 0.6rem;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.dc-size-select {
+  width: 100%;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 2px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.76rem;
+  color: #5a5a5a;
+  background: white;
+  margin-bottom: 0.7rem;
+  appearance: none;
+}
+
+.dc-add-btn {
+  width: 100%;
+  padding: 0.8rem;
+  background: #1a1a1a;
+  color: white;
+  border: none;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.74rem;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  margin-bottom: 0.9rem;
+  transition: background 0.2s;
+}
+
+.dc-add-btn:hover { background: #333; }
+
+.dc-meta { font-size: 0.68rem; color: #9a9a9a; line-height: 1.9; margin-bottom: 1rem; }
+
+.dc-desc {
+  font-size: 0.72rem;
+  color: #5a5a5a;
+  line-height: 1.7;
+  border-top: 1px solid #e2e2e2;
+  padding-top: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.dc-desc em { font-style: italic; font-family: 'Cormorant Garamond', serif; }
+
+.dc-accordion {
+  border-top: 1px solid #e2e2e2;
+  padding: 0.65rem 0;
+  display: flex;
+  justify-content: space-between;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.5rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #5a5a5a;
+  cursor: pointer;
+}
+
+.dc-accordion:last-of-type { border-bottom: 1px solid #e2e2e2; }
+
+.dc-float {
+  position: absolute;
+  top: 0; right: 0;
+  z-index: 20;
+  display: none;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.dc-float.dc-visible { display: flex; }
+
+.dc-loading {
+  background: white;
+  border: 1px solid #e2e2e2;
+  border-radius: 0 0 10px 10px;
+  border-top: none;
+  padding: 1rem 1.2rem;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  min-width: 180px;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.09);
+}
+
+.dc-loading.dc-visible { display: flex; }
+
+.dc-ldot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #8ab8cc;
+  animation: dcPulse 1s ease-in-out infinite;
+}
+
+.dc-ldot:nth-child(2) { animation-delay: 0.18s; }
+.dc-ldot:nth-child(3) { animation-delay: 0.36s; }
+
+@keyframes dcPulse {
+  0%,100% { opacity: 0.2; transform: scale(0.8); }
+  50%      { opacity: 1;   transform: scale(1.1); }
+}
+
+.dc-result {
+  background: white;
+  border: 1px solid #e2e2e2;
+  border-radius: 0 0 10px 10px;
+  border-top: none;
+  min-width: 260px;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.09);
+  overflow: hidden;
+  display: none;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.dc-result.dc-visible { display: block; opacity: 1; transform: translateY(0); }
+
+.dc-result-inner {
+  background: linear-gradient(135deg, #ddeef5, #e8f4f9);
+  padding: 1.4rem 1.2rem 1rem;
+  text-align: center;
+}
+
+.dc-size-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.52rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #4a8fa8;
+  margin-bottom: 0.15rem;
+}
+
+.dc-size-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 3.8rem;
+  font-weight: 300;
+  color: #4a8fa8;
+  line-height: 1;
+  margin-bottom: 0.2rem;
+}
+
+.dc-size-sub {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.5rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #8ab8cc;
+  margin-bottom: 0.8rem;
+}
+
+.dc-note { font-size: 0.7rem; color: #5a5a5a; line-height: 1.6; margin-bottom: 0.9rem; }
+
+.dc-conf-row { display: flex; align-items: center; gap: 0.5rem; }
+
+.dc-conf-bar {
+  flex: 1; height: 3px;
+  background: rgba(255,255,255,0.5);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.dc-conf-fill {
+  height: 100%; width: 0%;
+  background: linear-gradient(90deg, #8ab8cc, #4a8fa8);
+  border-radius: 2px;
+  transition: width 1s ease 0.2s;
+}
+
+.dc-conf-pct {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.56rem;
+  color: #4a8fa8;
+  white-space: nowrap;
+}
+
+.dc-result-footer {
+  padding: 0.6rem 0.9rem;
+  border-top: 1px solid rgba(138,184,204,0.2);
+  text-align: center;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.46rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #9a9a9a;
+}
+
+.dc-result-footer span { color: #4a8fa8; }
+
+/* ── HEADER ── */
+.site-header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.1rem 5vw;
+  background: #ffffff;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-bottom: 1px solid rgba(26,32,40,0.08);
+}
+
+.header-logo img {
+  height: 59px;
+  width: auto;
+  display: block;
+}
+
+.header-menu-btn {
+  background: none;
+  border: 1px solid rgba(26,32,40,0.25);
+  border-radius: 5px;
+  padding: 0.59rem 1.26rem;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.81rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #1a2028;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
+}
+
+.header-menu-btn:hover {
+  background: rgba(26,32,40,0.08);
+}
+
+.header-menu-btn svg {
+  transition: transform 0.25s ease;
+}
+
+.header-menu-btn.open svg {
+  transform: rotate(45deg);
+}
+
+/* Dropdown */
+.header-nav {
+  position: fixed;
+  top: 60px; right: 5vw;
+  background: rgba(255,255,255,0.96);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(26,32,40,0.1);
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+  padding: 0.5rem 0;
+  min-width: 180px;
+  z-index: 99;
+  display: none;
+  flex-direction: column;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.header-nav.open {
+  display: flex;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.header-nav a {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 300;
+  color: #1a2028;
+  text-decoration: none;
+  padding: 0.75rem 1.4rem;
+  display: block;
+  transition: background 0.15s;
+  border-bottom: 1px solid rgba(26,32,40,0.06);
+}
+
+.header-nav a:last-child {
+  border-bottom: 1px solid rgba(26,32,40,0.08);
+}
+
+.header-nav a:hover {
+  background: rgba(58,122,148,0.07);
+  color: #3a7a94;
+}
+
+/* push hero content below fixed header */
+.s-hero {
+  padding-top: 6rem;
+}
+
+</style>
+</head>
+<body>
+
+<!-- ══ SECTION 1: HERO ══ -->
+
+<!-- ══ HEADER ══ -->
+<header class="site-header">
+  <a class="header-logo" href="/">
+    <img src="data:image/png;base64,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" alt="Anthrospecs">
+  </a>
+  <button class="header-menu-btn" id="menuBtn" onclick="toggleMenu()">
+    <svg id="menuIcon" width="20" height="20" viewBox="0 0 14 14" fill="none" stroke="#1a2028" stroke-width="1.6" stroke-linecap="round">
+      <line x1="1" y1="4" x2="13" y2="4"/>
+      <line x1="1" y1="10" x2="13" y2="10"/>
+    </svg>
+    Menu
+  </button>
+  <nav class="header-nav" id="headerNav">
+    <a href="/science">Science</a>
+    <a href="/partners">Partners</a>
+    <a href="/about">About</a>
+  </nav>
+</header>
+
+<section class="s-hero">
+
+  <div class="hero-middle">
+    <div class="hero-brand">
+      <svg width="39" height="39" viewBox="0 0 28 28" fill="none">
+        <ellipse cx="14" cy="14" rx="12" ry="11" stroke="#1a2028" stroke-width="1.3" transform="rotate(-8 14 14)"/>
+        <ellipse cx="14" cy="14" rx="8"  ry="7"  stroke="#1a2028" stroke-width="1.1" transform="rotate(-2 14 14)"/>
+        <ellipse cx="14" cy="14" rx="4"  ry="3.6" stroke="#1a2028" stroke-width="0.9" transform="rotate(3 14 14)"/>
+      </svg>
+      <span class="hero-brand-name">Ask Ella</span>
+      <div class="hero-brand-divider"></div>
+      <span class="hero-brand-sub">By Anthrospecs</span>
+    </div>
+    <h1 class="hero-headline">
+      <span class="sci">Sizing science</span>
+      built into<br>your browser.
+    </h1>
+  </div>
+
+  <div class="hero-bottom">
+    <p class="hero-sub">Size charts don't travel. Ella does. Your fit profile, built on real body science, that follows you across the internet — so you always know your size, wherever you end up.</p>
+    <div class="hero-form-wrap">
+      <div class="hero-form">
+        <input class="hero-input" type="email" placeholder="your@email.com">
+        <button class="hero-btn">Join waitlist →</button>
+      </div>
+      <span class="hero-form-note">Free to install · No measurements needed</span>
+    </div>
+  </div>
+
+</section>
+
+<!-- ══ SECTION 2: HOW IT WORKS ══ -->
+<section class="s-how">
+  <p class="section-eyebrow">How it works</p>
+  <h2 class="section-title">Three steps to<br><em>smarter sizing.</em></h2>
+
+  <div class="steps-grid">
+    <div class="step-card">
+      <p class="step-num">01 — Answer</p>
+      <h3 class="step-title">A few simple questions.</h3>
+      <p class="step-body">Height, weight, how you like things to fit. No tape measure. No complicated measurements. Ella does the rest in seconds.</p>
+    </div>
+    <div class="step-card">
+      <p class="step-num">02 — Match</p>
+      <h3 class="step-title">Ella builds your twin.</h3>
+      <p class="step-body">Your answers are matched to a digital twin — a body model built from thousands of real, anonymised profiles. The science runs deeper than any size chart ever could.</p>
+    </div>
+    <div class="step-card">
+      <p class="step-num">03 — Shop</p>
+      <h3 class="step-title">Your size. Every site.</h3>
+      <p class="step-body">Ella travels with you across every brand, every website. She reads each garment and tells you your size before you buy — and gets sharper every time.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ SECTION 3: DEMO ══ -->
+<section class="s-demo">
+  <div class="demo-text">
+    <p class="section-eyebrow">The plugin</p>
+    <h2>Install once.<br><em>Shop everywhere.</em></h2>
+    <p>Add Ella to your browser in one click. From that point on, every product page you visit activates her automatically. She reads the garment — fabric, cut, brand sizing history — and cross-references your digital twin to surface your size, right where you need it.</p>
+    <a href="#" class="demo-link">Become an affiliate brand →</a>
+  </div>
+
+  <div class="demo-embed">
+    <div class="dc-browser">
+      <div class="dc-bar">
+        <div class="dc-dots">
+          <div class="dc-dot dc-dot-r"></div>
+          <div class="dc-dot dc-dot-a"></div>
+          <div class="dc-dot dc-dot-g"></div>
+        </div>
+        <div class="dc-url">maison-arden.com/shop/the-arden-dress</div>
+        <div class="dc-ella-tab" onclick="dcActivate()">
+          <svg width="12" height="12" viewBox="0 0 20 20" fill="none">
+            <ellipse cx="10" cy="10" rx="8.5" ry="7.8" stroke="currentColor" stroke-width="1.4" transform="rotate(-8 10 10)"/>
+            <ellipse cx="10" cy="10" rx="5.5" ry="5"   stroke="currentColor" stroke-width="1.2" transform="rotate(-2 10 10)"/>
+            <ellipse cx="10" cy="10" rx="2.5" ry="2.2" stroke="currentColor" stroke-width="1.0" transform="rotate(3 10 10)"/>
+          </svg>
+          Ask Ella
+        </div>
+      </div>
+
+      <div class="dc-product">
+        <div class="dc-store-nav">
+          <span class="dc-store-name">Maison Ardèn</span>
+          <div class="dc-store-links">
+            <a href="#">New in</a>
+            <a href="#">Ready to wear</a>
+            <a href="#">Accessories</a>
+            <a href="#">About</a>
+          </div>
+        </div>
+
+        <div class="dc-img-panel">
+          <div class="dc-img-inner">
+            <svg width="120" height="158" viewBox="0 0 160 200" fill="none">
+              <path d="M60 28 C60 20 68 16 80 16 C92 16 100 20 100 28" stroke="#7a6e62" stroke-width="1.4" fill="none"/>
+              <path d="M68 16 C70 26 74 30 80 32 C86 30 90 26 92 16" stroke="#7a6e62" stroke-width="1.2" fill="none"/>
+              <path d="M60 28 L34 50 L44 56 L62 40" stroke="#7a6e62" stroke-width="1.4" fill="none"/>
+              <path d="M100 28 L126 50 L116 56 L98 40" stroke="#7a6e62" stroke-width="1.4" fill="none"/>
+              <path d="M62 40 L56 130 L104 130 L98 40" stroke="#7a6e62" stroke-width="1.4" fill="none"/>
+              <path d="M76 44 Q80 52 84 44" stroke="#7a6e62" stroke-width="1.0" fill="none"/>
+              <circle cx="80" cy="54" r="3.5" stroke="#7a6e62" stroke-width="1.0" fill="none"/>
+              <path d="M56 130 Q80 136 104 130" stroke="#7a6e62" stroke-width="1.2" fill="none"/>
+              <path d="M34 50 Q28 80 26 110" stroke="#7a6e62" stroke-width="1.3" fill="none"/>
+              <path d="M44 56 Q38 84 36 110" stroke="#7a6e62" stroke-width="1.3" fill="none"/>
+              <path d="M26 110 Q31 114 36 110" stroke="#7a6e62" stroke-width="1.0" fill="none"/>
+              <path d="M126 50 Q132 80 134 110" stroke="#7a6e62" stroke-width="1.3" fill="none"/>
+              <path d="M116 56 Q122 84 124 110" stroke="#7a6e62" stroke-width="1.3" fill="none"/>
+              <path d="M124 110 Q129 114 134 110" stroke="#7a6e62" stroke-width="1.0" fill="none"/>
+              <path d="M68 50 Q66 88 68 126" stroke="#7a6e62" stroke-width="0.5" stroke-dasharray="2 5" opacity="0.35"/>
+              <path d="M92 50 Q94 88 92 126" stroke="#7a6e62" stroke-width="0.5" stroke-dasharray="2 5" opacity="0.35"/>
+            </svg>
+            <p class="dc-garment-tag">The Arden Dress</p>
+          </div>
+        </div>
+
+        <div class="dc-info-panel">
+          <p class="dc-product-brand">Maison Ardèn</p>
+          <h3 class="dc-product-name">The Arden Dress</h3>
+          <p class="dc-product-price">£ 395</p>
+          <div class="dc-rule"></div>
+          <p class="dc-colour-label">Colour — Ecru</p>
+          <div class="dc-swatches">
+            <div class="dc-swatch dc-active" style="background:#f0ebe0;"></div>
+            <div class="dc-swatch" style="background:#1a1a1a;"></div>
+            <div class="dc-swatch" style="background:#8a7060;"></div>
+          </div>
+          <span class="dc-size-guide">Size guide</span>
+          <select class="dc-size-select">
+            <option>Select a size</option>
+            <option>XS</option><option>S</option><option>M</option><option>L</option><option>XL</option>
+          </select>
+          <button class="dc-add-btn">add to bag</button>
+          <div class="dc-meta">
+            Complimentary shipping on all orders<br>
+            Duties and taxes included<br>
+            Estimated delivery 2–4 business days
+          </div>
+          <p class="dc-desc"><em>A considered shape.</em> The Arden Dress is cut from a fine-gauge merino knit with a deep keyhole and slim silhouette. Designed to move with the body.</p>
+          <div class="dc-accordion">Fit &amp; details <span>+</span></div>
+          <div class="dc-accordion">Material &amp; care <span>+</span></div>
+          <div class="dc-accordion">Sustainability <span>+</span></div>
+
+          <div class="dc-float" id="dcFloat">
+            <div class="dc-loading" id="dcLoading">
+              <div class="dc-ldot"></div>
+              <div class="dc-ldot"></div>
+              <div class="dc-ldot"></div>
+            </div>
+            <div class="dc-result" id="dcResult">
+              <div class="dc-result-inner">
+                <div class="dc-size-label">Suggested size</div>
+                <div class="dc-size-num">M</div>
+                <div class="dc-size-sub">Recommended for you</div>
+                <p class="dc-note">This dress runs slim through the body. If you prefer a little more ease, consider sizing up.</p>
+                <div class="dc-conf-row">
+                  <div class="dc-conf-bar"><div class="dc-conf-fill" id="dcConfFill"></div></div>
+                  <span class="dc-conf-pct">86% match</span>
+                </div>
+              </div>
+              <div class="dc-result-footer">Powered by <span>Anthrospecs</span> · sizing science</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ SECTION 4: DIGITAL TWIN ══ -->
+<section class="s-twin">
+  <div class="twin-canvas-wrap">
+    <canvas id="twinCanvas"></canvas>
+  </div>
+  <div class="twin-text">
+    <p class="section-eyebrow">The science</p>
+    <h2 class="twin-title">A <em>digital twin</em> built from thousands of real bodies.</h2>
+    <p class="twin-body">Behind every recommendation is a body model constructed from thousands of real people's measurements — anonymised, aggregated, and continuously refined. Ella matches you to that model, then maps it against each garment's fabric, cut, and intended fit. Not an algorithm guessing from a brand's outdated chart. Body science, working quietly in the background.</p>
+    <p class="twin-body">Your data blends into the crowd the moment it's submitted. What Ella learns from you strengthens the model for everyone — and what the model knows makes your recommendation more accurate than anything a size chart can offer.</p>
+    <a href="#" class="twin-link">Learn more →</a>
+  </div>
+</section>
+
+<!-- ══ SECTION 5: CLOSING CTA ══ -->
+<section class="s-cta">
+  <p class="section-eyebrow">Ask Ella</p>
+  <h2 class="cta-title">Sizing backed by body science.<br><em>Accuracy that compounds over time.</em></h2>
+  <p class="cta-sub">Free to install. No measurements needed. Works everywhere you shop.</p>
+  <div class="hero-form">
+    <input class="hero-input" type="email" placeholder="Email">
+    <button class="hero-btn">Join waitlist →</button>
+  </div>
+</section>
+
+<script>
+
+function toggleMenu() {
+  const btn = document.getElementById('menuBtn');
+  const nav = document.getElementById('headerNav');
+  btn.classList.toggle('open');
+  nav.classList.toggle('open');
+}
+
+// Close menu when clicking outside
+document.addEventListener('click', function(e) {
+  const btn = document.getElementById('menuBtn');
+  const nav = document.getElementById('headerNav');
+  if (!btn.contains(e.target) && !nav.contains(e.target)) {
+    btn.classList.remove('open');
+    nav.classList.remove('open');
+  }
+});
+
+/* ── DEMO INTERACTION ── */
+let dcState = 'idle';
+
+function dcActivate() {
+  if (dcState === 'result') {
+    document.getElementById('dcFloat').classList.remove('dc-visible');
+    document.getElementById('dcResult').classList.remove('dc-visible');
+    document.getElementById('dcLoading').classList.remove('dc-visible');
+    document.getElementById('dcConfFill').style.width = '0%';
+    dcState = 'idle';
+    return;
+  }
+  if (dcState === 'loading') return;
+  dcState = 'loading';
+
+  const float   = document.getElementById('dcFloat');
+  const loading = document.getElementById('dcLoading');
+  const result  = document.getElementById('dcResult');
+
+  float.classList.add('dc-visible');
+  loading.classList.add('dc-visible');
+
+  setTimeout(() => {
+    loading.classList.remove('dc-visible');
+    result.style.display = 'block';
+    result.offsetHeight;
+    result.classList.add('dc-visible');
+    setTimeout(() => { document.getElementById('dcConfFill').style.width = '86%'; }, 100);
+    dcState = 'result';
+  }, 1200);
+}
+
+/* ── POINT CLOUD ── */
+function buildBody() {
+  const pts = [];
+  function line(x1,y1,x2,y2,n,s){ for(let i=0;i<n;i++){ const t=i/n; pts.push([x1+(x2-x1)*t+(Math.random()-.5)*(s||.01), y1+(y2-y1)*t+(Math.random()-.5)*(s||.01)]); } }
+  function ellipse(cx,cy,rx,ry,n){ for(let i=0;i<n;i++){ const a=(i/n)*Math.PI*2; pts.push([cx+Math.cos(a)*rx+(Math.random()-.5)*.01, cy+Math.sin(a)*ry+(Math.random()-.5)*.01]); } }
+  function fill(x1,y1,x2,y2,n){ for(let i=0;i<n;i++) pts.push([x1+Math.random()*(x2-x1), y1+Math.random()*(y2-y1)]); }
+  ellipse(.5,.075,.055,.065,55);
+  line(.478,.14,.478,.17,10,.007); line(.522,.14,.522,.17,10,.007);
+  line(.478,.17,.27,.205,28,.007); line(.522,.17,.73,.205,28,.007);
+  line(.27,.205,.31,.435,38,.007); line(.73,.205,.69,.435,38,.007);
+  line(.31,.435,.34,.465,12,.006); line(.69,.435,.66,.465,12,.006);
+  line(.34,.465,.28,.535,18,.008); line(.66,.465,.72,.535,18,.008);
+  line(.28,.535,.41,.555,16,.006); line(.72,.535,.59,.555,16,.006);
+  line(.27,.205,.155,.355,26,.008); line(.155,.355,.13,.475,20,.007);
+  line(.73,.205,.845,.355,26,.008); line(.845,.355,.87,.475,20,.007);
+  line(.37,.555,.345,.745,36,.008); line(.345,.745,.355,.945,34,.007);
+  line(.63,.555,.655,.745,36,.008); line(.655,.745,.645,.945,34,.007);
+  for(let y=.19;y<.55;y+=.038){ const s=y<.29?.19:y<.44?.165:.13; line(.5-s,y,.5+s,y,16,.004); }
+  for(let y=.57;y<.94;y+=.055){ line(.35,y,.41,y,7,.003); line(.59,y,.65,y,7,.003); }
+  fill(.32,.19,.68,.545,100); fill(.36,.555,.42,.94,35); fill(.58,.555,.64,.94,35);
+  return pts;
+}
+
+const bodyPts = buildBody();
+
+function initTwin(id) {
+  const canvas = document.getElementById(id);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  function resize() {
+    const r = window.devicePixelRatio || 1;
+    canvas.width  = canvas.offsetWidth  * r;
+    canvas.height = canvas.offsetHeight * r;
+    ctx.scale(r, r);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+  let tick = 0;
+  function draw() {
+    const W = canvas.offsetWidth, H = canvas.offsetHeight;
+    ctx.clearRect(0, 0, W, H);
+    tick += 0.007;
+    bodyPts.forEach(([nx,ny], i) => {
+      const pulse = 0.5 + 0.5 * Math.sin(tick + i * 0.28);
+      ctx.beginPath();
+      ctx.arc(nx*W, ny*H, 0.7 + pulse*0.9, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(138,184,204,${0.18 + pulse*0.55})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+window.addEventListener('load', () => { initTwin('twinCanvas'); });
+</script>
+
+<!-- ══ FOOTER ══ -->
+<footer class="site-footer">
+  <div class="footer-left">
+    <span class="footer-brand">Anthrospecs</span>
+    <span class="footer-copy">© 2026 Anthrospecs. All rights reserved.</span>
+  </div>
+  <a href="https://www.linkedin.com/company/anthrospecs" target="_blank" class="footer-linkedin">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/>
+      <circle cx="4" cy="4" r="2"/>
+    </svg>
+    Follow on LinkedIn
+  </a>
+  <span class="footer-tag">sizing science</span>
+</footer>
+
+</body>
+</html>   ══════════════════════════════════════════ */
+.s-hero {
+  min-height: 100vh;
+  background: linear-gradient(200deg, #eaf3f8 0%, #d4e6ef 35%, #bfd5e2 70%, #c8dce8 100%);
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  padding: 2.8rem 5vw 3rem;
+}
+
+/* Brand mark — sits above headline */
+.hero-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.2rem;
+  opacity: 0;
+  animation: fadeUp 0.7s ease forwards 0.1s;
+}
+
+.hero-brand-name {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1.37rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #1a2028;
+}
+
+.hero-brand-divider {
+  width: 1px;
+  height: 21px;
+  background: rgba(80,110,130,0.35);
+  margin: 0 0.2rem;
+}
+
+.hero-brand-sub {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #6a7888;
+}
+
+/* Middle: brand + headline stacked */
+.hero-middle {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+  padding: 1rem 0;
+}
+
+.hero-headline {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: clamp(4rem, 9vw, 8.5rem);
+  line-height: 0.96;
+  color: #111820;
+  opacity: 0;
+  animation: fadeUp 0.9s ease forwards 0.25s;
+}
+
+.hero-headline .sci {
+  font-style: italic;
+  color: #3a7a94;
+  display: block;
+}
+
+/* Bottom row: sub-copy + form */
+.hero-bottom {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 2;
+  opacity: 0;
+  animation: fadeUp 1s ease forwards 0.45s;
+}
+
+.hero-sub {
+  font-size: 1.19rem;
+  line-height: 1.85;
+  color: #3a4a58;
+  max-width: 620px;
+}
+
+.hero-form-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+.hero-form {
+  display: flex;
+  border-radius: 3px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.hero-input {
+  padding: 0.94rem 1.2rem;
+  border: none;
+  background: rgba(255,255,255,0.75);
+  backdrop-filter: blur(8px);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  color: #1a2028;
+  width: 252px;
+  outline: none;
+}
+
+.hero-input::placeholder { color: #8a9aaa; }
+
+.hero-btn {
+  padding: 0.94rem 1.56rem;
+  background: #1a2028;
+  color: white;
+  border: none;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+
+.hero-btn:hover { background: #3a7a94; }
+
+.hero-form-note {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  color: #8a9aaa;
+}
+
+/* ── SECTION 2: HOW IT WORKS ── */
+.s-how {
+  padding: 7rem 6vw;
+  background: var(--white);
+}
+
+.section-eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--blue-deep);
+  margin-bottom: 1.2rem;
+}
+
+.section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 300;
+  line-height: 1.12;
+  margin-bottom: 3.5rem;
+  max-width: 520px;
+}
+
+.section-title em {
+  font-style: italic;
+  color: var(--blue-deep);
+}
+
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+}
+
+.step-card {
+  background: var(--off);
+  padding: 2.4rem 2rem;
+  position: relative;
+  transition: background 0.3s ease;
+}
+
+.step-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--blue-light), var(--blue-mid));
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.step-card:hover { background: var(--blue-pale); }
+.step-card:hover::after { opacity: 1; }
+
+.step-num {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.52rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--blue-mid);
+  margin-bottom: 1.2rem;
+}
+
+.step-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.5rem;
+  font-weight: 300;
+  line-height: 1.2;
+  margin-bottom: 0.8rem;
+  color: var(--ink);
+}
+
+.step-body {
+  font-size: 0.78rem;
+  line-height: 1.85;
+  color: var(--ink-soft);
+}
+
+/* ── SECTION 3: DEMO ── */
+.s-demo {
+  background: var(--white);
+  padding: 6rem 6vw;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5vw;
+  align-items: center;
+}
+
+.demo-text h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.2rem, 4vw, 3.4rem);
+  font-weight: 300;
+  line-height: 1.1;
+  margin-bottom: 1.4rem;
+}
+
+.demo-text h2 em {
+  font-style: italic;
+  color: var(--blue-deep);
+  display: block;
+}
+
+.demo-text p {
+  font-size: 0.84rem;
+  line-height: 1.9;
+  color: var(--ink-soft);
+  margin-bottom: 2rem;
+  max-width: 400px;
+}
+
+.demo-link {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: color 0.2s;
+}
+
+.demo-link:hover { color: var(--blue-deep); }
+
+/* ── SECTION 4: SCIENCE / TWIN ── */
+.s-twin {
+  background: #111820;
+  padding: 7rem 6vw;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5vw;
+  align-items: center;
+}
+
+.twin-canvas-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 480px;
+}
+
+.twin-canvas-wrap canvas {
+  width: 100%;
+  height: 100%;
+  max-width: 340px;
+}
+
+.twin-text .section-eyebrow { color: var(--blue-mid); }
+
+.twin-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2rem, 3.5vw, 3rem);
+  font-weight: 300;
+  line-height: 1.12;
+  color: var(--white);
+  margin-bottom: 1.6rem;
+  max-width: 460px;
+}
+
+.twin-title em { font-style: italic; color: var(--blue-mid); }
+
+.twin-body {
+  font-size: 0.82rem;
+  line-height: 1.95;
+  color: #5a6878;
+  margin-bottom: 1.2rem;
+  max-width: 440px;
+}
+
+.twin-link {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #4a5868;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  transition: color 0.2s;
+}
+
+.twin-link:hover { color: var(--blue-mid); }
+
+/* ── SECTION 5: CLOSING CTA ── */
+.s-cta {
+  background: linear-gradient(160deg, var(--blue-pale) 0%, var(--white) 70%);
+  padding: 8rem 6vw;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.s-cta .section-eyebrow { text-align: center; margin-bottom: 1.2rem; }
+
+.cta-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.2rem, 4vw, 3.4rem);
+  font-weight: 300;
+  line-height: 1.12;
+  margin-bottom: 0.5rem;
+  max-width: 600px;
+  text-align: center;
+}
+
+.cta-title em {
+  font-style: italic;
+  color: var(--blue-deep);
+  display: block;
+}
+
+.cta-sub {
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+  margin-bottom: 2.4rem;
+}
+
+/* ── FOOTER ── */
+.site-footer {
+  padding: 2.2rem 6vw;
+  border-top: 1px solid var(--rule);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--white);
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.footer-left {
+  display: flex;
+  align-items: center;
+  gap: 1.4rem;
+}
+
+.footer-brand {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.56rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+
+.footer-copy {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.54rem;
+  letter-spacing: 0.1em;
+  color: var(--ink-mute);
+}
+
+.footer-linkedin {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.54rem;
+  letter-spacing: 0.1em;
+  color: var(--ink-mute);
+  text-decoration: none;
+  padding: 0.45rem 0.9rem;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.footer-linkedin:hover { border-color: #0077b5; color: #0077b5; }
+
+.footer-tag {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 0.88rem;
+  color: var(--blue-mid);
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .steps-grid { grid-template-columns: 1fr; gap: 2px; }
+  .s-demo { grid-template-columns: 1fr; padding: 4rem 6vw; }
+  .s-twin { grid-template-columns: 1fr; }
+  .twin-canvas-wrap { height: 300px; }
+  .hero-headline { font-size: clamp(3.2rem, 12vw, 5rem); }
   .hero-bottom { flex-direction: column; align-items: flex-start; }
   .hero-form-wrap { align-items: flex-start; }
 }
