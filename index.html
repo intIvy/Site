@@ -979,10 +979,10 @@ body {
   <div class="hero-bottom">
     <p class="hero-sub">Size charts don't travel. Ella does. Your fit profile, built on real body science, that follows you across the internet — so you always know your size, wherever you end up.</p>
     <div class="hero-form-wrap">
-      <div class="hero-form">
-        <input class="hero-input" type="email" placeholder="your@email.com">
-        <button class="hero-btn">Join waitlist →</button>
-      </div>
+      <form class="hero-form" action="https://docs.google.com/forms/d/e/1FAIpQLSf6Z4ofU3J1Wihd8J0d78ogpDrTbNX8yOSF31OqCmT43FlCPA/formResponse" method="POST" target="hidden_iframe">
+        <input class="hero-input" type="email" name="entry.848272049" placeholder="your@email.com" required>
+        <button class="hero-btn" type="submit">Join waitlist →</button>
+      </form>
       <span class="hero-form-note">Free to install · No measurements needed</span>
     </div>
   </div>
@@ -1149,10 +1149,10 @@ body {
   <p class="section-eyebrow">Ask Ella</p>
   <h2 class="cta-title">Sizing backed by body science.<br><em>Accuracy that compounds over time.</em></h2>
   <p class="cta-sub">Free to install. No measurements needed. Works everywhere you shop.</p>
-  <div class="hero-form">
-    <input class="hero-input" type="email" placeholder="Email">
-    <button class="hero-btn">Join waitlist →</button>
-  </div>
+<form class="hero-form" action="https://docs.google.com/forms/d/e/1FAIpQLSf6Z4ofU3J1Wihd8J0d78ogpDrTbNX8yOSF31OqCmT43FlCPA/formResponse" method="POST" target="hidden_iframe">
+  <input class="hero-input" type="email" name="entry.848272049" placeholder="Email" required>
+  <button class="hero-btn" type="submit">Join waitlist →</button>
+</form>
 </section>
 
 <script>
@@ -1279,5 +1279,7 @@ window.addEventListener('load', () => { initTwin('twinCanvas'); });
   <span class="footer-tag">sizing science</span>
 </footer>
 
+<!-- ADDED FOR GOOGLE FORM -->
+<iframe name="hidden_iframe" style="display:none;"></iframe>
 </body>
 </html>
