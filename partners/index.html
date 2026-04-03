@@ -105,10 +105,6 @@
     padding: 7rem 4rem 5rem;
     max-width: 1100px;
     margin: 0 auto;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem;
-    align-items: end;
   }
 
   .hero-label {
@@ -148,9 +144,9 @@
   .content { max-width: 1100px; margin: 0 auto; padding: 0 4rem; }
 
   .section {
-    display: grid;
-    grid-template-columns: 200px 1fr;
-    gap: 4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
     padding: 5rem 0;
     border-bottom: 1px solid var(--rule);
   }
@@ -160,7 +156,6 @@
     letter-spacing: 0.22em;
     text-transform: uppercase;
     color: var(--warm-grey);
-    padding-top: 0.3rem;
   }
 
   .section-body p {
@@ -169,7 +164,6 @@
     color: var(--ink);
     letter-spacing: 0.02em;
     margin-bottom: 1.2rem;
-    max-width: 640px;
   }
 
   .section-body p:last-child { margin-bottom: 0; }
@@ -269,20 +263,22 @@
   /* ── What brands receive: two-col grid ── */
   .receive-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     gap: 0;
-    max-width: 640px;
+    max-width: 100%;
     border: 1px solid var(--rule);
   }
 
   .receive-item {
     padding: 1.6rem 1.8rem;
     border-bottom: 1px solid var(--rule);
-    border-right: 1px solid var(--rule);
+    border-right: none;
   }
 
+  .receive-item:last-child { border-bottom: none; }
   .receive-item:nth-child(even) { border-right: none; }
-  .receive-item:nth-last-child(-n+2) { border-bottom: none; }
+  .receive-item:nth-last-child(-n+2) { border-bottom: 1px solid var(--rule); }
+  .receive-item:last-child { border-bottom: none; }
 
   .receive-item-label {
     font-size: 0.58rem;
@@ -536,9 +532,7 @@
     <div class="fade-up">
       <p class="hero-label">For brands</p>
       <h1 class="hero-headline">If sizing is costing you <em>returns,</em><br>we'd like to talk.</h1>
-    </div>
-    <div class="hero-right fade-up">
-      <p class="hero-intro">
+      <p class="hero-intro" style="margin-top: 2.5rem;">
         The consumer-facing tool is one half of what we're building. The other is a brand intelligence layer that feeds anonymised fit outcome data back to the brands whose products we're recommending.
       </p>
       <p class="hero-intro">
@@ -597,7 +591,6 @@
   <!-- Pull quote -->
   <div class="content">
     <div class="section" style="border-bottom: none; padding-bottom: 2rem;">
-      <div class="section-label"></div>
       <div class="section-body">
         <div class="pull-quote">Over time, cross-brand data compounds in value — giving brands visibility into how their sizing performs not just on their own site, but across the wider market.</div>
       </div>
