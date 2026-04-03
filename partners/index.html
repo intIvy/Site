@@ -1,1 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Partners — Anthrospecs</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #ffffff;
+    --ink: #1A1714;
+    --warm-grey: #9A9189;
+    --accent: #4a9ab5;
+    --rule: #E2DDD8;
+  }
 
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { font-size: 16px; }
+
+  body {
+    background: linear-gradient(to bottom, #ffffff 0%, #ADD8E6 75%);
+    background-attachment: scroll;
+    color: var(--ink);
+    font-family: 'DM Mono', monospace;
+    font-weight: 300;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── Site header ── */
+  .site-header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.1rem 5vw;
+    background: #ffffff;
+    border-bottom: 1px solid rgba(26,32,40,0.08);
+  }
+
+  .header-logo img { height: 59px; width: auto; display: block; }
+
+  .header-menu-btn {
+    background: none;
+    border: 1px solid rgba(26,32,40,0.25);
+    border-radius: 5px;
+    padding: 0.59rem 1.26rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.81rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #1a2028;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s;
+  }
+
+  .header-menu-btn:hover { background: rgba(26,32,40,0.08); }
+  .header-menu-btn svg { transition: transform 0.25s ease; }
+  .header-menu-btn.open svg { transform: rotate(45deg); }
+
+  .header-nav {
+    position: fixed;
+    top: 82px; right: 5vw;
+    background: rgba(255,255,255,0.96);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(26,32,40,0.1);
+    border-radius: 8px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+    padding: 0.5rem 0;
+    min-width: 180px;
+    z-index: 99;
+    display: none;
+    flex-direction: column;
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  .header-nav.open { display: flex; opacity: 1; transform: translateY(0); }
+
+  .header-nav a {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 300;
+    color: #1a2028;
+    text-decoration: none;
+    padding: 0.75rem 1.4rem;
+    display: block;
+    transition: background 0.15s;
+    border-bottom: 1px solid rgba(26,32,40,0.06);
+  }
+
+  .header-nav a:last-child { border-bottom: 1px solid rgba(26,32,40,0.08); }
+  .header-nav a:hover { background: rgba(58,122,148,0.07); color: #3a7a94; }
+
+  .page-body { padding-top: 82px; }
+
+  /* ── Hero ── */
+  .hero {
+    padding: 7rem 4rem 5rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: end;
+  }
+
+  .hero-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-headline {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.8rem, 5vw, 4.2rem);
+    font-weight: 300;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+  }
+
+  .hero-headline em { font-style: italic; color: var(--accent); }
+  .hero-right { padding-bottom: 0.5rem; }
+
+  .hero-intro {
+    font-size: 0.8rem;
+    line-height: 1.9;
+    color: var(--warm-grey);
+    letter-spacing: 0.02em;
+    margin-bottom: 2rem;
+  }
+
+  .divider {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 4rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .content { max-width: 1100px; margin: 0 auto; padding: 0 4rem; }
+
+  .section {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 4rem;
+    padding: 5rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .section-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--warm-grey);
+    padding-top: 0.3rem;
+  }
+
+  .section-body p {
+    font-size: 0.8rem;
+    line-height: 1.95;
+    color: var(--ink);
+    letter-spacing: 0.02em;
+    margin-bottom: 1.2rem;
+    max-width: 640px;
+  }
+
+  .section-body p:last-child { margin-bottom: 0; }
+
+  .pull-quote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.4rem, 2.5vw, 1.9rem);
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.4;
+    color: var(--ink);
+    border-left: 2px solid var(--accent);
+    padding-left: 1.5rem;
+    margin: 2rem 0;
+    max-width: 580px;
+  }
+
+  /* ── Stats row ── */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    padding: 5rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .stat-item {
+    padding: 0 3rem 0 0;
+    border-right: 1px solid var(--rule);
+    margin-right: 3rem;
+  }
+
+  .stat-item:last-child { border-right: none; margin-right: 0; }
+
+  .stat-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3rem;
+    font-weight: 300;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+
+  .stat-number sup { font-size: 1.2rem; vertical-align: super; }
+
+  .stat-desc {
+    font-size: 0.65rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--warm-grey);
+    line-height: 1.6;
+  }
+
+  /* ── How it works: numbered steps ── */
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    max-width: 640px;
+  }
+
+  .step {
+    display: grid;
+    grid-template-columns: 2.4rem 1fr;
+    gap: 1.5rem;
+    align-items: start;
+    padding: 1.8rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .step:last-child { border-bottom: none; }
+
+  .step-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--accent);
+    padding-top: 0.1rem;
+  }
+
+  .step-content {}
+
+  .step-title {
+    font-size: 0.65rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin-bottom: 0.5rem;
+  }
+
+  .step-body {
+    font-size: 0.78rem;
+    line-height: 1.9;
+    color: var(--warm-grey);
+    letter-spacing: 0.02em;
+  }
+
+  /* ── What brands receive: two-col grid ── */
+  .receive-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    max-width: 640px;
+    border: 1px solid var(--rule);
+  }
+
+  .receive-item {
+    padding: 1.6rem 1.8rem;
+    border-bottom: 1px solid var(--rule);
+    border-right: 1px solid var(--rule);
+  }
+
+  .receive-item:nth-child(even) { border-right: none; }
+  .receive-item:nth-last-child(-n+2) { border-bottom: none; }
+
+  .receive-item-label {
+    font-size: 0.58rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+  }
+
+  .receive-item-text {
+    font-size: 0.75rem;
+    line-height: 1.8;
+    color: var(--ink);
+    letter-spacing: 0.01em;
+  }
+
+
+  /* ── CTA ── */
+  .cta-section { padding: 6rem 0; text-align: center; }
+
+  .cta-section h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 300;
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+    color: var(--ink);
+  }
+
+  .cta-section p {
+    font-size: 0.75rem;
+    color: var(--ink);
+    letter-spacing: 0.04em;
+    margin-bottom: 2.5rem;
+    line-height: 1.8;
+  }
+
+  .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+  .btn-primary {
+    display: inline-block;
+    padding: 0.9rem 2.2rem;
+    background: var(--ink);
+    color: #F5F0E8;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: opacity 0.2s;
+  }
+
+  .btn-primary:hover { opacity: 0.8; }
+
+  .btn-secondary {
+    display: inline-block;
+    padding: 0.9rem 2.2rem;
+    border: 1px solid var(--ink);
+    color: var(--ink);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+
+  .btn-secondary:hover { background: var(--ink); color: #F5F0E8; }
+
+  /* ── Footer ── */
+  .site-footer {
+    padding: 2.2rem 6vw;
+    border-top: 1px solid #e2e2e2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #ffffff;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .footer-left { display: flex; align-items: center; gap: 1.4rem; }
+
+  .footer-brand {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.56rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #9a9a9a;
+  }
+
+  .footer-copy {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.54rem;
+    letter-spacing: 0.1em;
+    color: #9a9a9a;
+  }
+
+  .footer-linkedin {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.54rem;
+    letter-spacing: 0.1em;
+    color: #9a9a9a;
+    text-decoration: none;
+    padding: 0.45rem 0.9rem;
+    border: 1px solid #e2e2e2;
+    border-radius: 4px;
+    transition: all 0.2s;
+  }
+
+  .footer-linkedin:hover { border-color: #0077b5; color: #0077b5; }
+
+  .footer-tag {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 0.88rem;
+    color: #8ab8cc;
+  }
+
+  /* Animations */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(24px);
+    animation: fadeUp 0.8s ease forwards;
+  }
+
+  .fade-up:nth-child(2) { animation-delay: 0.1s; }
+  .fade-up:nth-child(3) { animation-delay: 0.2s; }
+
+  @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+
+  @media (max-width: 768px) {
+    .hero, .section { grid-template-columns: 1fr; gap: 2rem; padding: 3rem 2rem; }
+    .content, .divider { padding-left: 2rem; padding-right: 2rem; }
+    .stats-row { grid-template-columns: 1fr; gap: 2rem; padding: 3rem 2rem; }
+    .stat-item { border-right: none; border-bottom: 1px solid var(--rule); padding-bottom: 2rem; margin-right: 0; }
+    .stat-item:last-child { border-bottom: none; }
+    .receive-grid { grid-template-columns: 1fr; }
+    .receive-item { border-right: none !important; }
+    .receive-item:nth-last-child(-n+2) { border-bottom: 1px solid var(--rule); }
+    .receive-item:last-child { border-bottom: none; }
+    .pilot-stats { flex-direction: column; gap: 1.5rem; }
+  }
+  /* ── Contact form ── */
+  .contact-form {
+    max-width: 560px;
+    margin: 0 auto;
+    text-align: left;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.2rem;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .form-label {
+    font-size: 0.58rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+
+  .form-optional {
+    letter-spacing: 0.08em;
+    text-transform: none;
+    font-size: 0.56rem;
+    color: var(--ink);
+  }
+
+  .form-input {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--rule);
+    padding: 0.6rem 0;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 300;
+    color: var(--ink);
+    letter-spacing: 0.02em;
+    outline: none;
+    transition: border-color 0.2s;
+    width: 100%;
+  }
+
+  .form-input::placeholder { color: var(--rule); }
+  .form-input:focus { border-bottom-color: var(--accent); }
+
+  .form-textarea {
+    resize: none;
+    height: 80px;
+    line-height: 1.7;
+  }
+
+  .form-submit-row {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-top: 0.8rem;
+  }
+
+  .form-status {
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: var(--warm-grey);
+  }
+
+  .form-status.success { color: #6a9a6a; }
+  .form-status.error { color: #b05a5a; }
+
+  @media (max-width: 768px) {
+    .form-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="header-logo" href="/">
+    <img src="https://www.anthrospecs.com/_next/image?url=%2Fimages%2Flogo.png&w=256&q=75" alt="Anthrospecs" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+    <span style="display:none; font-family:'Cormorant Garamond',serif; font-size:1.2rem; font-weight:400; letter-spacing:0.1em; color:#1a2028;">Anthrospecs</span>
+  </a>
+  <button class="header-menu-btn" id="menuBtn" onclick="toggleMenu()">
+    <svg id="menuIcon" width="20" height="20" viewBox="0 0 14 14" fill="none" stroke="#1a2028" stroke-width="1.6" stroke-linecap="round">
+      <line x1="1" y1="4" x2="13" y2="4"/>
+      <line x1="1" y1="10" x2="13" y2="10"/>
+    </svg>
+    Menu
+  </button>
+  <nav class="header-nav" id="headerNav">
+    <a href="/science">Science</a>
+    <a href="/partners">Partners</a>
+    <a href="/about">About</a>
+  </nav>
+</header>
+
+<div class="page-body">
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="fade-up">
+      <p class="hero-label">For brands</p>
+      <h1 class="hero-headline">If sizing is costing you <em>returns,</em><br>we'd like to talk.</h1>
+    </div>
+    <div class="hero-right fade-up">
+      <p class="hero-intro">
+        The consumer-facing tool is one half of what we're building. The other is a brand intelligence layer that feeds anonymised fit outcome data back to the brands whose products we're recommending.
+      </p>
+      <p class="hero-intro">
+        Brands gain a clearer picture of their customers. Customers get clothes that actually fit. Returns fall. That's the loop we're closing.
+      </p>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- Stats -->
+  <div class="content">
+    <div class="stats-row">
+      <div class="stat-item">
+        <div class="stat-number">£7<sup>bn</sup></div>
+        <div class="stat-desc">In clothing returns<br>processed annually<br>in the UK</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">70<sup>%</sup></div>
+        <div class="stat-desc">Of returns attributed<br>to sizing or fit<br>issues</div>
+      </div>
+
+    </div>
+  </div>
+
+
+
+  <!-- What brands receive -->
+  <div class="content">
+    <div class="section">
+      <div class="section-label">What brands receive</div>
+      <div class="section-body">
+        <p style="margin-bottom: 2rem;">The Brand Intelligence Interface surfaces fit outcome data in a format designed for upstream product decisions — not just post-purchase analysis.</p>
+        <div class="receive-grid">
+          <div class="receive-item">
+            <div class="receive-item-label">Return analysis</div>
+            <div class="receive-item-text">Fit-attributed return rates broken down by product, size, and body type — not just overall return volume.</div>
+          </div>
+          <div class="receive-item">
+            <div class="receive-item-label">Size chart accuracy</div>
+            <div class="receive-item-text">How well your published measurements match the body geometries that bought them. Where the gaps are.</div>
+          </div>
+          <div class="receive-item">
+            <div class="receive-item-label">Customer shape data</div>
+            <div class="receive-item-text">Anonymised aggregate anthropometrics of your actual customer base — not the sample your grading was built on.</div>
+          </div>
+          <div class="receive-item">
+            <div class="receive-item-label">Market context</div>
+            <div class="receive-item-text">How your sizing performs relative to the broader market across comparable product categories.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pull quote -->
+  <div class="content">
+    <div class="section" style="border-bottom: none; padding-bottom: 2rem;">
+      <div class="section-label"></div>
+      <div class="section-body">
+        <div class="pull-quote">Over time, cross-brand data compounds in value — giving brands visibility into how their sizing performs not just on their own site, but across the wider market.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- How it works -->
+  <div class="content">
+    <div class="section">
+      <div class="section-label">How it works</div>
+      <div class="section-body">
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">i</div>
+            <div class="step-content">
+              <div class="step-title">Consumer enters basic measurements</div>
+              <div class="step-body">Height, weight, and age — entered once in the Ask Ella extension. No tape measure, no scanning hardware. The model handles the geometry from there.</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">ii</div>
+            <div class="step-content">
+              <div class="step-title">Digital twin is constructed</div>
+              <div class="step-body">A point cloud body model is generated using our ML model, trained on 11,000+ body scans from the SizeUK national sizing survey. No two twins are the same.</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">iii</div>
+            <div class="step-content">
+              <div class="step-title">Twin is matched against the product</div>
+              <div class="step-body">The digital twin is compared against the brand's size chart, the item's intended fit derived from product copy, and fabric content. The result is a sizing recommendation grounded in all three variables.</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">iv</div>
+            <div class="step-content">
+              <div class="step-title">Anonymised outcomes flow to the brand</div>
+              <div class="step-body">Fit outcomes — what was recommended, what was purchased, what was returned — are aggregated and fed back to brands through the Brand Intelligence Interface. All data is anonymised.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <!-- CTA + Contact form -->
+  <div class="content">
+    <div class="cta-section">
+      <h2>Working in fashion retail?<br>We want to hear from you.</h2>
+      <p>We're currently piloting with a small number of brand partners.<br>If you're interested in reducing returns and understanding your customers better,<br>get in touch.</p>
+
+      <div class="contact-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="company">Company name</label>
+            <input class="form-input" type="text" id="company" placeholder="Your brand or company">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="name">Your name</label>
+            <input class="form-input" type="text" id="name" placeholder="First and last name">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="email">Email</label>
+          <input class="form-input" type="email" id="email" placeholder="you@yourcompany.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="message">Message <span class="form-optional">(optional)</span></label>
+          <textarea class="form-input form-textarea" id="message" placeholder="Tell us a bit about your sizing challenges, if you'd like."></textarea>
+        </div>
+        <div class="form-submit-row">
+          <button class="btn-primary" id="submitBtn" onclick="submitForm()">Get in touch</button>
+          <span class="form-status" id="formStatus"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer class="site-footer">
+  <div class="footer-left">
+    <span class="footer-brand">Anthrospecs</span>
+    <span class="footer-copy">© 2026 Anthrospecs. All rights reserved.</span>
+  </div>
+  <a href="https://www.linkedin.com/company/anthrospecs" target="_blank" class="footer-linkedin">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/>
+      <circle cx="4" cy="4" r="2"/>
+    </svg>
+    Follow on LinkedIn
+  </a>
+  <span class="footer-tag">sizing science</span>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+function submitForm() {
+  const company = document.getElementById('company').value.trim();
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const message = document.getElementById('message').value.trim();
+  const status = document.getElementById('formStatus');
+
+  if (!company || !name || !email) {
+    status.textContent = 'Please fill in company, name, and email.';
+    status.className = 'form-status error';
+    return;
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    status.textContent = 'Please enter a valid email address.';
+    status.className = 'form-status error';
+    return;
+  }
+
+  const subject = encodeURIComponent('Brand partner enquiry — ' + company);
+  const body = encodeURIComponent(
+    'Company: ' + company + '\n' +
+    'Name: ' + name + '\n' +
+    'Email: ' + email + '\n\n' +
+    (message ? 'Message:\n' + message : '(No message provided)')
+  );
+
+  window.location.href = 'mailto:amanda@anthrospecs.com?subject=' + subject + '&body=' + body;
+
+  status.textContent = 'Opening your email client…';
+  status.className = 'form-status success';
+}
+
+
+  const btn = document.getElementById('menuBtn');
+  const nav = document.getElementById('headerNav');
+  btn.classList.toggle('open');
+  nav.classList.toggle('open');
+}
+
+document.addEventListener('click', function(e) {
+  const btn = document.getElementById('menuBtn');
+  const nav = document.getElementById('headerNav');
+  if (!btn
