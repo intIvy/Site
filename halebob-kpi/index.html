@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#16273F">
+<title>Ask Ella · Hale Bob KPIs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;700&display=swap">
+<style>
+  :root{
+    --ink:#1a1a1a; --ink-soft:#5a5a5a; --ink-mute:#9a9a9a; --rule:#e2e2e2; --off:#f4f4f2; --white:#fff;
+    --blue-pale:#ddeef5; --blue-light:#c4dcea; --blue-mid:#8ab8cc; --blue-deep:#4a8fa8; --navy:#16273F;
+    --good:#2f7d5b; --good-soft:#eaf4ee; --amber:#9a5b12;
+    --serif:"Cormorant Garamond",Georgia,serif;
+    --sans:"DM Sans",-apple-system,BlinkMacSystemFont,sans-serif;
+    --mono:"DM Mono",ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{font-family:var(--sans);font-weight:300;color:var(--ink);background:var(--off);line-height:1.55;-webkit-font-smoothing:antialiased}
+  .num{font-variant-numeric:tabular-nums}
+  .eyebrow{font-family:var(--mono);font-weight:400;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-mute)}
+  h1,h2,h3{font-family:var(--serif);font-weight:400;margin:0;letter-spacing:.01em}
+  .wrap{max-width:1080px;margin:0 auto;padding:40px 6vw 80px}
+
+  /* header */
+  header.top{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;border-bottom:1px solid var(--rule);padding-bottom:24px}
+  header.top h1{font-size:40px;line-height:1.02;margin-top:10px}
+  header.top h1 em{font-style:italic;color:var(--blue-deep)}
+  .top .meta{font-family:var(--mono);font-size:11px;color:var(--ink-mute);text-align:right;line-height:1.9;letter-spacing:.04em}
+  .top .meta b{color:var(--ink-soft);font-weight:500}
+
+  /* period controls */
+  .controls{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:26px 0 30px}
+  .seg{display:inline-flex;border:1px solid var(--rule);border-radius:999px;overflow:hidden;background:var(--white)}
+  .seg button{font-family:var(--mono);font-size:12px;letter-spacing:.04em;border:0;background:transparent;color:var(--ink-soft);
+    padding:9px 18px;cursor:pointer;transition:.15s}
+  .seg button+button{border-left:1px solid var(--rule)}
+  .seg button[aria-pressed="true"]{background:var(--navy);color:#fff}
+  .custom{display:none;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;color:var(--ink-soft)}
+  .custom.show{display:inline-flex;flex-wrap:wrap}
+  .custom input{font-family:var(--mono);font-size:12px;padding:8px 10px;border:1px solid var(--rule);border-radius:8px;color:var(--ink);background:var(--white)}
+  .custom button{font-family:var(--mono);font-size:12px;padding:8px 16px;border:0;border-radius:8px;background:var(--blue-deep);color:#fff;cursor:pointer}
+  .status{font-family:var(--mono);font-size:11px;color:var(--ink-mute);margin-left:auto}
+
+  /* sections */
+  section{margin-top:46px}
+  .sec-head{display:flex;align-items:baseline;gap:12px;border-bottom:1px solid var(--rule);padding-bottom:10px;margin-bottom:22px}
+  .sec-head h2{font-size:24px}
+  .sec-head .n{font-family:var(--mono);font-size:12px;color:var(--blue-deep)}
+  .sec-head .sub{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--ink-mute);letter-spacing:.04em}
+
+  .grid{display:grid;gap:16px}
+  .g4{grid-template-columns:repeat(4,1fr)} .g3{grid-template-columns:repeat(3,1fr)} .g2{grid-template-columns:1fr 1fr}
+  .span2{grid-column:span 2}
+  .card{background:var(--white);border:1px solid var(--rule);border-radius:4px;padding:22px 24px}
+  .card .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-mute)}
+  .card .v{font-family:var(--serif);font-size:44px;line-height:1;margin-top:14px}
+  .card .v small{font-family:var(--sans);font-size:16px;color:var(--ink-mute);font-weight:400}
+  .card .sup{font-size:12.5px;color:var(--ink-soft);margin-top:10px}
+  .hero{background:linear-gradient(135deg,var(--blue-pale),var(--white) 70%);border-color:var(--blue-light)}
+  .hero .v{font-size:66px}
+  .bar{height:10px;border-radius:999px;background:var(--off);overflow:hidden;margin-top:16px;display:flex}
+  .bar i{display:block;height:100%;background:var(--blue-deep)}
+  .legend{display:flex;gap:16px;margin-top:12px;font-family:var(--mono);font-size:11px;color:var(--ink-mute);flex-wrap:wrap}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .dot{width:8px;height:8px;border-radius:999px}
+  .card.good{background:linear-gradient(135deg,var(--good-soft),var(--white) 70%);border-color:#cfe6da}
+  .card.good .v{color:var(--good)}  .card.good .k{color:var(--good)}
+
+  .bars{display:flex;flex-direction:column;gap:11px;margin-top:4px}
+  .brow{display:grid;grid-template-columns:92px 1fr auto;align-items:center;gap:12px;font-size:13px}
+  .brow .lbl{color:var(--ink-soft)}
+  .track{height:20px;background:var(--off);border-radius:4px;overflow:hidden}
+  .track i{display:block;height:100%;border-radius:4px}
+  .fill-b{background:var(--blue-deep)} .fill-m{background:var(--blue-mid)}
+  .brow .val{font-variant-numeric:tabular-nums;font-weight:500;min-width:58px;text-align:right}
+
+  .reasons{list-style:none;padding:0;margin:14px 0 0;display:flex;flex-direction:column;gap:7px}
+  .reasons li{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:13px;padding:8px 12px;background:var(--off);border-radius:4px}
+  .reasons li .c{font-variant-numeric:tabular-nums;font-weight:500;background:var(--white);border:1px solid var(--rule);border-radius:4px;padding:1px 9px;font-size:12px}
+  .reasons li.sz .c{color:var(--blue-deep);border-color:var(--blue-light)}
+  .note-good{color:var(--good);font-weight:500;font-size:13px;margin-top:14px;display:flex;gap:8px;align-items:flex-start}
+
+  .cmp table{width:100%;border-collapse:collapse}
+  .cmp th,.cmp td{text-align:left;padding:11px 0;border-bottom:1px solid var(--rule);font-size:13px}
+  .cmp thead th{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-mute);font-weight:400}
+  .cmp .mB{color:var(--blue-deep)} .cmp .mM{color:var(--ink-soft)}
+  .cmp td.val{font-variant-numeric:tabular-nums;font-weight:500;text-align:right}
+  .cmp td .u{color:var(--ink-mute);font-weight:400;font-size:11px}
+
+  .foot{margin-top:50px;border-top:1px solid var(--rule);padding-top:18px;font-size:11.5px;color:var(--ink-mute);line-height:1.8}
+  .foot b{color:var(--ink-soft);font-weight:500}
+  .empty-note{font-size:13px;color:var(--ink-soft);padding:30px 0}
+
+  /* password gate */
+  .gate{position:fixed;inset:0;background:linear-gradient(135deg,var(--blue-pale),var(--off));display:flex;align-items:center;justify-content:center;padding:24px;z-index:50}
+  .gate.hide{display:none}
+  .gate .box{background:var(--white);border:1px solid var(--rule);border-radius:6px;padding:40px;max-width:380px;width:100%;text-align:center}
+  .gate .eyebrow{display:block;margin-bottom:10px}
+  .gate h1{font-size:30px;margin-bottom:6px}
+  .gate p{font-size:13px;color:var(--ink-soft);margin:0 0 22px}
+  .gate input{width:100%;font-family:var(--mono);font-size:14px;padding:12px 14px;border:1px solid var(--rule);border-radius:8px;margin-bottom:12px}
+  .gate button{width:100%;font-family:var(--mono);font-size:13px;letter-spacing:.04em;padding:12px;border:0;border-radius:8px;background:var(--navy);color:#fff;cursor:pointer}
+  .gate .err{color:#b23b3b;font-size:12px;min-height:16px;margin-top:10px}
+  .hidden{display:none}
+
+  @media(max-width:860px){
+    .g4,.g3{grid-template-columns:1fr 1fr}.span2{grid-column:span 2}
+    header.top h1{font-size:32px}.hero .v{font-size:54px}
+  }
+  @media(max-width:560px){
+    .g4,.g3,.g2{grid-template-columns:1fr}.span2{grid-column:auto}
+    .top .meta{text-align:left}.status{margin-left:0}
+  }
+</style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div class="gate" id="gate">
+  <div class="box">
+    <span class="eyebrow">Anthrospecs · Ask Ella</span>
+    <h1>Hale&nbsp;Bob KPIs</h1>
+    <p>This report is private. Enter the access password to continue.</p>
+    <form id="gateForm" autocomplete="off">
+      <input type="password" id="pw" placeholder="Password" autocomplete="current-password" aria-label="Password">
+      <button type="submit" id="gateBtn">View report</button>
+      <div class="err" id="gateErr"></div>
+    </form>
+  </div>
+</div>
+
+<div class="wrap hidden" id="app">
+  <header class="top">
+    <div>
+      <span class="eyebrow">Anthrospecs × Hale&nbsp;Bob · Ask&nbsp;Ella</span>
+      <h1>Pilot <em>KPI report</em></h1>
+    </div>
+    <div class="meta">
+      <div><b>Store</b> halebob.no · NOK</div>
+      <div><b>Period</b> <span id="periodLabel">—</span></div>
+      <div><b>Live</b> <span id="generated">—</span></div>
+    </div>
+  </header>
+
+  <div class="controls">
+    <div class="seg" role="group" aria-label="Period">
+      <button data-days="30" aria-pressed="true">Last 30 days</button>
+      <button data-days="90" aria-pressed="false">Last 90 days</button>
+      <button data-custom aria-pressed="false">Custom</button>
+    </div>
+    <div class="custom" id="customBox">
+      <label>From <input type="date" id="fromD"></label>
+      <label>To <input type="date" id="toD"></label>
+      <button id="applyCustom">Apply</button>
+    </div>
+    <div class="status" id="status"></div>
+  </div>
+
+  <div id="report"></div>
+
+  <div class="foot" id="foot"></div>
+</div>
+
+<script>
+const FN = "https://joahpmqjppakamkrhyfu.supabase.co/functions/v1/halebob-kpi";
+let PW = "";
+try { PW = sessionStorage.getItem("hb_kpi_pw") || ""; } catch(e){}
+
+const $ = (s,el=document)=>el.querySelector(s);
+const nf = n => (n==null?"—":Number(n).toLocaleString("en-US"));
+const pct = n => (n==null?"—":Number(n)+"%");
+const fmtDate = d => new Date(d).toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"});
+
+/* ---------- auth + fetch ---------- */
+async function callKPI(params){
+  const res = await fetch(FN,{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify(Object.assign({password:PW}, params))
+  });
+  if(res.status===401){ const e=new Error("unauthorized"); e.code=401; throw e; }
+  if(!res.ok){ const e=new Error("Request failed ("+res.status+")"); throw e; }
+  return res.json();
+}
+
+/* ---------- gate ---------- */
+const gate=$("#gate"), app=$("#app");
+$("#gateForm").addEventListener("submit", async (e)=>{
+  e.preventDefault();
+  PW = $("#pw").value;
+  $("#gateErr").textContent="";
+  $("#gateBtn").textContent="Checking…";
+  try{
+    await load({days:30});   // validates password + loads default
+    try{ sessionStorage.setItem("hb_kpi_pw", PW); }catch(_){}
+    gate.classList.add("hide"); app.classList.remove("hidden");
+  }catch(err){
+    $("#gateErr").textContent = err.code===401 ? "Incorrect password." : "Could not load report.";
+  }finally{ $("#gateBtn").textContent="View report"; }
+});
+
+/* ---------- controls ---------- */
+let current={days:30};
+document.querySelectorAll(".seg button").forEach(b=>{
+  b.addEventListener("click", ()=>{
+    document.querySelectorAll(".seg button").forEach(x=>x.setAttribute("aria-pressed","false"));
+    b.setAttribute("aria-pressed","true");
+    if(b.hasAttribute("data-custom")){ $("#customBox").classList.add("show"); return; }
+    $("#customBox").classList.remove("show");
+    current={days:Number(b.dataset.days)};
+    load(current);
+  });
+});
+$("#applyCustom").addEventListener("click", ()=>{
+  const f=$("#fromD").value, t=$("#toD").value;
+  if(!f||!t){ $("#status").textContent="Pick both dates."; return; }
+  const toExcl=new Date(t); toExcl.setDate(toExcl.getDate()+1);
+  current={from:new Date(f).toISOString(), to:toExcl.toISOString(), _label:fmtDate(f)+" – "+fmtDate(t)};
+  load(current);
+});
+
+async function load(params){
+  $("#status").textContent="Loading…";
+  const data = await callKPI(params);
+  render(data, params);
+  $("#status").textContent="Updated "+new Date().toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"});
+  return data;
+}
+
+/* ---------- render ---------- */
+function barPair(aLabel,aVal,aFill,bLabel,bVal,bFill,fmt){
+  const mx=Math.max(aVal||0,bVal||0)||1;
+  const w=v=> (100*(v||0)/mx).toFixed(1)+"%";
+  return `<div class="bars" style="margin-top:14px;max-width:560px">
+    <div class="brow"><span class="lbl">${aLabel}</span><div class="track"><i class="${aFill}" style="width:${w(aVal)}"></i></div><span class="val">${fmt(aVal)}</span></div>
+    <div class="brow"><span class="lbl">${bLabel}</span><div class="track"><i class="${bFill}" style="width:${w(bVal)}"></i></div><span class="val">${fmt(bVal)}</span></div>
+  </div>`;
+}
+const RLABEL={ProductWrongSize:"Wrong size","Wrong size":"Wrong size",CustomerChangedMind:"Changed mind",Other:"Other",ProductIncorrectDescription:"Incorrect description"};
+function reasonList(arr){
+  if(!arr||!arr.length) return `<div class="sup" style="margin-top:14px">No returns in this period.</div>`;
+  return `<ul class="reasons">`+arr.map(r=>{
+    const lab=RLABEL[r.reason]||r.reason; const sz=/wrong\s*size/i.test(lab)?" sz":"";
+    return `<li class="${sz.trim()}">${lab} <span class="c num">${r.n}</span></li>`;
+  }).join("")+`</ul>`;
+}
+
+function render(d, params){
+  // period label
+  let plabel;
+  if(params._label) plabel=params._label;
+  else if(params.days) plabel="Last "+params.days+" days";
+  else plabel=fmtDate(d.range.from)+" – "+fmtDate(d.range.to);
+  $("#periodLabel").textContent=plabel;
+  $("#generated").textContent=fmtDate(d.range.to);
+
+  const o=d.orders, en=d.endorsed, rc=d.reach, rt=d.returns, fit=d.fit;
+
+  if(!o.total){
+    $("#report").innerHTML=`<div class="empty-note">No orders recorded in this period. Try a wider range.</div>`;
+    $("#foot").innerHTML="";
+    return;
+  }
+
+  // return reduction
+  let redHTML="—", redSup="";
+  if(rt.non_ella_return_pct!=null && rt.followed_orders>0){
+    const diff=rt.non_ella_return_pct - rt.followed_return_pct;
+    const rel=rt.non_ella_return_pct>0 ? Math.round(100*diff/rt.non_ella_return_pct) : null;
+    redHTML = rel==null?"—":(rel>=0?"≈"+rel:"+"+Math.abs(rel))+"<small>%</small>";
+    redSup = `Followed-Ella-size orders return at <b>${pct(rt.followed_return_pct)}</b> (${rt.followed_returned} of ${rt.followed_orders}) vs <b>${pct(rt.non_ella_return_pct)}</b> (${rt.non_ella_returned} of ${rt.non_ella_orders}) for non-Ella orders. Self-selected cohorts, not an A/B test.`;
+  } else {
+    redSup = `Not enough orders that followed Ella's size in this period to compute a rate.`;
+  }
+  const sizeRetTotal=(rt.non_ella_reasons||[]).filter(r=>/wrong\s*size/i.test(r.reason)).reduce((s,r)=>s+r.n,0);
+  const nonEllaVal=(rt.non_ella_reasons||[]).reduce((s,r)=>s+Number(r.val||0),0);
+  const followedVal=(rt.followed_reasons||[]).reduce((s,r)=>s+Number(r.val||0),0);
+  const followedItems=(rt.followed_reasons||[]).reduce((s,r)=>s+r.n,0);
+  const nonEllaItems=(rt.non_ella_reasons||[]).reduce((s,r)=>s+r.n,0);
+
+  // fit rows
+  const fitRow=(label,bv,mv,unit)=>{
+    return `<tr><td>${label}</td>
+      <td class="val mB">${bv==null?"—":bv}<span class="u"> ${unit}</span></td>
+      <td class="val mM">${mv==null?"—":mv}<span class="u"> ${unit}</span></td></tr>`;
+  };
+  const B=fit.buyers||{}, M=fit.browsers||{};
+
+  // top products
+  const tp=d.top_products||[];
+  const tpMax=Math.max(1,...tp.map(x=>x.shoppers));
+  const tpHTML = tp.length? tp.map(p=>`<div class="brow"><span class="lbl">${p.product}</span><div class="track"><i class="fill-b" style="width:${(100*p.shoppers/tpMax).toFixed(1)}%"></i></div><span class="val">${p.shoppers}</span></div>`).join("")
+    : `<div class="sup">No recommendations in this period.</div>`;
+
+  const aovMax=Math.max(o.aov_ella||0,o.aov_other||0)||1;
+
+  $("#report").innerHTML = `
+  <section>
+    <div class="sec-head"><span class="n">01</span><h2>Overview</h2><span class="sub">checkout &amp; widget reach</span></div>
+    <div class="grid g4">
+      <div class="card hero span2">
+        <div class="k">Orders placed with Ask Ella</div>
+        <div class="v num">${pct(o.pct_ella).replace('%','')}<small>%</small></div>
+        <div class="bar"><i style="width:${o.pct_ella||0}%"></i></div>
+        <div class="legend">
+          <span><i class="dot" style="background:var(--blue-deep)"></i>Used Ella · ${o.ella} orders</span>
+          <span><i class="dot" style="background:var(--off);border:1px solid var(--rule)"></i>No Ella · ${o.non_ella} orders</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="k">Bought a size Ella endorsed</div>
+        <div class="v num">${en.pct==null?"—":en.pct}<small>%</small></div>
+        <div class="sup">${en.within} of ${en.ella_orders} Ella orders (${en.exact} exact · ${en.within-en.exact} flagged alternate)</div>
+      </div>
+      <div class="card">
+        <div class="k">Recommendations</div>
+        <div class="v num">${nf(rc.recs)}</div>
+        <div class="sup">size recs generated in this period</div>
+      </div>
+    </div>
+    <div class="grid g4" style="margin-top:16px">
+      <div class="card">
+        <div class="k">Shoppers advised by Ella</div>
+        <div class="v num">${nf(rc.recipients)}</div>
+        <div class="sup">unique shoppers who received a recommendation</div>
+      </div>
+      <div class="card">
+        <div class="k">Opened → completed profile</div>
+        <div class="v num">${rc.completion_pct==null?"—":rc.completion_pct}<small>%</small></div>
+        <div class="sup">${nf(rc.completed)} of ${nf(rc.opened)} who opened Ella finished their profile</div>
+      </div>
+      <div class="card span2">
+        <div class="k">Average order value · Ella vs other</div>
+        ${barPair("Ella orders",o.aov_ella,"fill-b","Other orders",o.aov_other,"fill-m",nf)}
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="n">02</span><h2>Returns</h2><span class="sub">what came back, and why</span></div>
+    <div class="grid g3">
+      <div class="card good">
+        <div class="k">Lower return rate · Ella followers vs non-Ella</div>
+        <div class="v num">${redHTML}</div>
+        <div class="sup">${redSup}</div>
+      </div>
+      <div class="card">
+        <div class="k">Ella returns · followed Ella's size</div>
+        <div class="v num">${rt.followed_orders>0?(rt.followed_return_pct==null?"—":rt.followed_return_pct):"—"}<small>%</small></div>
+        <div class="sup">${rt.followed_returned} of ${rt.followed_orders} followed-size orders</div>
+      </div>
+      <div class="card">
+        <div class="k">Regular returns</div>
+        <div class="v num">${rt.non_ella_return_pct==null?"—":rt.non_ella_return_pct}<small>%</small></div>
+        <div class="sup">${rt.non_ella_returned} of ${rt.non_ella_orders} non-Ella orders</div>
+      </div>
+    </div>
+    <div class="grid g2" style="margin-top:16px">
+      <div class="card">
+        <div class="k">Ella (followed size) returns · reasons</div>
+        <div class="sup" style="margin-top:12px">${nf(followedVal)} NOK · ${rt.followed_returned} order${rt.followed_returned===1?"":"s"} (${followedItems} item${followedItems===1?"":"s"})</div>
+        ${reasonList(rt.followed_reasons)}
+        ${sizeRetTotal===0?`<div class="note-good">✓ Zero size-related returns among shoppers who followed Ella.</div>`:""}
+      </div>
+      <div class="card">
+        <div class="k">Regular returns · reasons</div>
+        <div class="sup" style="margin-top:12px">${nf(nonEllaVal)} NOK · ${rt.non_ella_returned} order${rt.non_ella_returned===1?"":"s"} (${nonEllaItems} item${nonEllaItems===1?"":"s"})</div>
+        ${reasonList(rt.non_ella_reasons)}
+        ${sizeRetTotal>0?`<div class="sup" style="margin-top:12px">Every size-related return this period (<b>${sizeRetTotal}</b>) came from a shopper who did <b>not</b> use Ella.</div>`:""}
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="n">03</span><h2>Customer metrics</h2><span class="sub">who's shopping, and their fit profile</span></div>
+    <div class="grid g2">
+      <div class="card">
+        <div class="k" style="margin-bottom:14px">Top products sized with Ella</div>
+        <div class="bars">${tpHTML}</div>
+        <div class="sup" style="margin-top:14px">Distinct shoppers who got a size recommendation on each, this period.</div>
+      </div>
+      <div class="card cmp">
+        <table>
+          <thead><tr><th>Average fit profile</th><th class="val mB">Buyers · ${fit.buyers_n||0}</th><th class="val mM">All shoppers · ${fit.browsers_n||0}</th></tr></thead>
+          <tbody>
+            ${fitRow("Age",B.age,M.age,"yrs")}
+            ${fitRow("Weight",B.weight,M.weight,"kg")}
+            ${fitRow("Height",B.height,M.height,"cm")}
+            ${fitRow("Predicted waist",B.waist,M.waist,"cm")}
+            ${fitRow("Predicted inseam",B.inseam,M.inseam,"cm")}
+          </tbody>
+        </table>
+        <div class="sup" style="margin-top:12px">Waist &amp; inseam are model-predicted. Excludes profiles with impossible height/weight entries.</div>
+      </div>
+    </div>
+  </section>`;
+
+  $("#foot").innerHTML = `
+    <b>Definitions.</b> <b>Used Ask Ella</b> — order linked to a shopper who built an Ask Ella profile.
+    <b>Bought a size Ella endorsed</b> — the order took the exact size Ella recommended, or (when flagged between two sizes) the adjacent size Ella named.
+    <b>Opened → completed</b> — sessions finishing the profile ÷ sessions opening the widget.
+    <b>Top products</b> — ranked by distinct shoppers who received a recommendation on each.<br>
+    <b>Source.</b> Anthrospecs pilot database, partner halebob.no · ${fmtDate(d.range.from)} – ${fmtDate(d.range.to)} · currency NOK.
+    Early-pilot sample — treat percentages as directional; the return-rate gap in particular rests on few Ella orders.`;
+}
+
+/* if a password was remembered this session, try to auto-enter */
+(async function(){
+  if(PW){
+    try{ await load({days:30}); gate.classList.add("hide"); app.classList.remove("hidden"); }
+    catch(e){ try{sessionStorage.removeItem("hb_kpi_pw");}catch(_){} PW=""; }
+  }
+})();
+</script>
+</body>
+</html>
