@@ -84,6 +84,14 @@
   .reasons li .c{font-variant-numeric:tabular-nums;font-weight:500;background:var(--white);border:1px solid var(--rule);border-radius:4px;padding:1px 9px;font-size:12px}
   .reasons li.sz .c{color:var(--blue-deep);border-color:var(--blue-light)}
   .note-good{color:var(--good);font-weight:500;font-size:13px;margin-top:14px;display:flex;gap:8px;align-items:flex-start}
+  .pie-wrap{display:flex;align-items:center;gap:22px;margin-top:18px;flex-wrap:wrap}
+  .pie{width:124px;height:124px;border-radius:50%;flex:none;
+    -webkit-mask:radial-gradient(farthest-side,#0000 calc(100% - 30px),#000 0);
+            mask:radial-gradient(farthest-side,#0000 calc(100% - 30px),#000 0)}
+  .pie-legend{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px;font-size:13px;flex:1;min-width:150px}
+  .pie-legend li{display:flex;align-items:center;gap:9px;color:var(--ink-soft)}
+  .pie-legend .sw{width:11px;height:11px;border-radius:3px;flex:none}
+  .pie-legend .c{margin-left:auto;font-variant-numeric:tabular-nums;font-weight:500;color:var(--ink);background:var(--off);border:1px solid var(--rule);border-radius:4px;padding:1px 9px;font-size:12px}
 
   .cmp table{width:100%;border-collapse:collapse}
   .cmp th,.cmp td{text-align:left;padding:11px 0;border-bottom:1px solid var(--rule);font-size:13px}
@@ -242,12 +250,23 @@ function barPair(aLabel,aVal,aFill,bLabel,bVal,bFill,fmt){
   </div>`;
 }
 const RLABEL={ProductWrongSize:"Wrong size","Wrong size":"Wrong size",CustomerChangedMind:"Changed mind",Other:"Other",ProductIncorrectDescription:"Incorrect description"};
-function reasonList(arr){
-  if(!arr||!arr.length) return `<div class="sup" style="margin-top:14px">No returns in this period.</div>`;
-  return `<ul class="reasons">`+arr.map(r=>{
-    const lab=RLABEL[r.reason]||r.reason; const sz=/wrong\s*size/i.test(lab)?" sz":"";
-    return `<li class="${sz.trim()}">${lab} <span class="c num">${r.n}</span></li>`;
-  }).join("")+`</ul>`;
+const RCOLOR={"Wrong size":"var(--blue-deep)","Changed mind":"var(--blue-mid)","Other":"var(--ink-mute)","Incorrect description":"var(--navy)"};
+const PIE_PALETTE=["var(--blue-deep)","var(--blue-mid)","var(--navy)","var(--ink-mute)","var(--blue-light)"];
+function pieChart(arr){
+  if(!arr||!arr.length) return `<div class="sup" style="margin-top:16px">No returns in this period.</div>`;
+  const items=arr.map(r=>({lab:RLABEL[r.reason]||r.reason, n:r.n}));
+  const total=items.reduce((s,x)=>s+x.n,0)||1;
+  const colorFor=(lab,i)=>RCOLOR[lab]||PIE_PALETTE[i%PIE_PALETTE.length];
+  let acc=0; const stops=[];
+  items.forEach((x,i)=>{
+    const a=acc/total*360, b=(acc+x.n)/total*360; acc+=x.n;
+    stops.push(`${colorFor(x.lab,i)} ${a}deg ${b}deg`);
+  });
+  const legend=items.map((x,i)=>`<li><span class="sw" style="background:${colorFor(x.lab,i)}"></span>${x.lab}<span class="c num">${x.n} · ${Math.round(100*x.n/total)}%</span></li>`).join("");
+  return `<div class="pie-wrap">
+    <div class="pie" style="background:conic-gradient(${stops.join(",")})" role="img" aria-label="Return reasons breakdown"></div>
+    <ul class="pie-legend">${legend}</ul>
+  </div>`;
 }
 
 function render(d, params){
@@ -267,15 +286,14 @@ function render(d, params){
     return;
   }
 
-  // return reduction
-  let redHTML="—", redSup="";
-  if(rt.non_ella_return_pct!=null && rt.followed_orders>0){
-    const diff=rt.non_ella_return_pct - rt.followed_return_pct;
-    const rel=rt.non_ella_return_pct>0 ? Math.round(100*diff/rt.non_ella_return_pct) : null;
-    redHTML = rel==null?"—":(rel>=0?"≈"+rel:"+"+Math.abs(rel))+"<small>%</small>";
-    redSup = `Followed-Ella-size orders return at <b>${pct(rt.followed_return_pct)}</b> (${rt.followed_returned} of ${rt.followed_orders}) vs <b>${pct(rt.non_ella_return_pct)}</b> (${rt.non_ella_returned} of ${rt.non_ella_orders}) for non-Ella orders. Self-selected cohorts, not an A/B test.`;
-  } else {
-    redSup = `Not enough orders that followed Ella's size in this period to compute a rate.`;
+  // return-rate comparison: absolute (percentage points) and relative (%)
+  let ppHTML="—", relHTML="—", retValid=false;
+  if(rt.non_ella_return_pct!=null && rt.followed_orders>0 && rt.followed_return_pct!=null){
+    retValid=true;
+    const diff=Math.round((rt.non_ella_return_pct - rt.followed_return_pct)*10)/10;
+    const rel=rt.non_ella_return_pct>0 ? Math.round(100*(rt.non_ella_return_pct - rt.followed_return_pct)/rt.non_ella_return_pct) : null;
+    ppHTML = diff+"<small> pp</small>";
+    relHTML = rel==null?"—":((rel>=0?"≈"+rel:"+"+Math.abs(rel))+"<small>%</small>");
   }
   const sizeRetTotal=(rt.non_ella_reasons||[]).filter(r=>/wrong\s*size/i.test(r.reason)).reduce((s,r)=>s+r.n,0);
   const nonEllaVal=(rt.non_ella_reasons||[]).reduce((s,r)=>s+Number(r.val||0),0);
@@ -335,19 +353,25 @@ function render(d, params){
         <div class="sup">${nf(rc.completed)} of ${nf(rc.opened)} who opened Ella finished their profile</div>
       </div>
       <div class="card span2">
-        <div class="k">Average order value · Ella vs other</div>
+        <div class="k">Average order value</div>
         ${barPair("Ella orders",o.aov_ella,"fill-b","Other orders",o.aov_other,"fill-m",nf)}
+        <div class="sup" style="margin-top:14px">${(o.aov_ella!=null&&o.aov_other)?`Ella orders are <b>${Math.abs((o.aov_ella-o.aov_other)/o.aov_other*100).toFixed(1)}%</b> ${o.aov_ella>=o.aov_other?"higher":"lower"} than other orders.`:""}</div>
       </div>
     </div>
   </section>
 
   <section>
     <div class="sec-head"><span class="n">02</span><h2>Returns</h2><span class="sub">what came back, and why</span></div>
-    <div class="grid g3">
+    <div class="grid g4">
       <div class="card good">
-        <div class="k">Lower return rate · Ella followers vs non-Ella</div>
-        <div class="v num">${redHTML}</div>
-        <div class="sup">${redSup}</div>
+        <div class="k">Return rate · points lower</div>
+        <div class="v num">${retValid?ppHTML:"—"}</div>
+        <div class="sup">Absolute gap: non-Ella ${pct(rt.non_ella_return_pct)} − followed-Ella ${rt.followed_orders>0?pct(rt.followed_return_pct):"—"}.</div>
+      </div>
+      <div class="card good">
+        <div class="k">Return rate · relative reduction</div>
+        <div class="v num">${retValid?relHTML:"—"}</div>
+        <div class="sup">Followers return about this much less often than non-Ella shoppers. Self-selected cohorts, not an A/B test.</div>
       </div>
       <div class="card">
         <div class="k">Ella returns · followed Ella's size</div>
@@ -364,13 +388,13 @@ function render(d, params){
       <div class="card">
         <div class="k">Ella (followed size) returns · reasons</div>
         <div class="sup" style="margin-top:12px">${nf(followedVal)} NOK · ${rt.followed_returned} order${rt.followed_returned===1?"":"s"} (${followedItems} item${followedItems===1?"":"s"})</div>
-        ${reasonList(rt.followed_reasons)}
+        ${pieChart(rt.followed_reasons)}
         ${sizeRetTotal===0?`<div class="note-good">✓ Zero size-related returns among shoppers who followed Ella.</div>`:""}
       </div>
       <div class="card">
         <div class="k">Regular returns · reasons</div>
         <div class="sup" style="margin-top:12px">${nf(nonEllaVal)} NOK · ${rt.non_ella_returned} order${rt.non_ella_returned===1?"":"s"} (${nonEllaItems} item${nonEllaItems===1?"":"s"})</div>
-        ${reasonList(rt.non_ella_reasons)}
+        ${pieChart(rt.non_ella_reasons)}
         ${sizeRetTotal>0?`<div class="sup" style="margin-top:12px">Every size-related return this period (<b>${sizeRetTotal}</b>) came from a shopper who did <b>not</b> use Ella.</div>`:""}
       </div>
     </div>
