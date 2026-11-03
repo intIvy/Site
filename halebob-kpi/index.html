@@ -56,7 +56,12 @@
   .grid{display:grid;gap:16px}
   .g4{grid-template-columns:repeat(4,1fr)} .g3{grid-template-columns:repeat(3,1fr)} .g2{grid-template-columns:1fr 1fr}
   .span2{grid-column:span 2}
-  .card{background:var(--white);border:1px solid var(--rule);border-radius:4px;padding:22px 24px}
+  .card{background:var(--white);border:1px solid var(--rule);border-radius:4px;padding:22px 24px;cursor:pointer;
+    transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease}
+  .card:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(22,39,63,.09);border-color:var(--blue-mid)}
+  .card.sel{border-color:var(--blue-deep);box-shadow:0 0 0 2px rgba(74,143,168,.40)}
+  .card.sel:hover{transform:translateY(-2px);box-shadow:0 0 0 2px rgba(74,143,168,.40),0 8px 22px rgba(22,39,63,.09)}
+  @media(prefers-reduced-motion:reduce){ .card,.card:hover{transition:none;transform:none} }
   .card .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-mute)}
   .card .v{font-family:var(--serif);font-size:44px;line-height:1;margin-top:14px}
   .card .v small{font-family:var(--sans);font-size:16px;color:var(--ink-mute);font-weight:400}
@@ -239,6 +244,12 @@ async function load(params){
   $("#status").textContent="Updated "+new Date().toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"});
   return data;
 }
+
+/* click a card to highlight it (click again to clear) */
+$("#report").addEventListener("click", e=>{
+  const c=e.target.closest(".card");
+  if(c) c.classList.toggle("sel");
+});
 
 /* ---------- render ---------- */
 function barPair(aLabel,aVal,aFill,bLabel,bVal,bFill,fmt){
