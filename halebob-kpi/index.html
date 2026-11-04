@@ -188,6 +188,7 @@ const $ = (s,el=document)=>el.querySelector(s);
 const nf = n => (n==null?"—":Number(n).toLocaleString("en-US"));
 const pct = n => (n==null?"—":Number(n)+"%");
 const fmtDate = d => new Date(d).toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"});
+const SHAPE = s => s ? s.replace(/_/g," ").replace(/\b\w/g,c=>c.toUpperCase()) : "—";
 
 /* ---------- auth + fetch ---------- */
 async function callKPI(params){
@@ -297,20 +298,21 @@ function render(d, params){
     return;
   }
 
-  // return-rate comparison: absolute (percentage points) and relative (%)
+  // return-rate comparison: followed-Ella vs everyone else ("other" = non-Ella + Ella off-rec)
   let ppHTML="—", relHTML="—", retValid=false;
-  if(rt.non_ella_return_pct!=null && rt.followed_orders>0 && rt.followed_return_pct!=null){
+  if(rt.other_return_pct!=null && rt.followed_orders>0 && rt.followed_return_pct!=null){
     retValid=true;
-    const diff=Math.round((rt.non_ella_return_pct - rt.followed_return_pct)*10)/10;
-    const rel=rt.non_ella_return_pct>0 ? Math.round(100*(rt.non_ella_return_pct - rt.followed_return_pct)/rt.non_ella_return_pct) : null;
+    const diff=Math.round((rt.other_return_pct - rt.followed_return_pct)*10)/10;
+    const rel=rt.other_return_pct>0 ? Math.round(100*(rt.other_return_pct - rt.followed_return_pct)/rt.other_return_pct) : null;
     ppHTML = diff+"<small> pp</small>";
     relHTML = rel==null?"—":((rel>=0?"≈"+rel:"+"+Math.abs(rel))+"<small>%</small>");
   }
-  const sizeRetTotal=(rt.non_ella_reasons||[]).filter(r=>/wrong\s*size/i.test(r.reason)).reduce((s,r)=>s+r.n,0);
-  const nonEllaVal=(rt.non_ella_reasons||[]).reduce((s,r)=>s+Number(r.val||0),0);
+  const otherSize=(rt.other_reasons||[]).filter(r=>/wrong\s*size/i.test(r.reason)).reduce((s,r)=>s+r.n,0);
+  const followedSize=(rt.followed_reasons||[]).filter(r=>/wrong\s*size/i.test(r.reason)).reduce((s,r)=>s+r.n,0);
+  const otherVal=(rt.other_reasons||[]).reduce((s,r)=>s+Number(r.val||0),0);
   const followedVal=(rt.followed_reasons||[]).reduce((s,r)=>s+Number(r.val||0),0);
   const followedItems=(rt.followed_reasons||[]).reduce((s,r)=>s+r.n,0);
-  const nonEllaItems=(rt.non_ella_reasons||[]).reduce((s,r)=>s+r.n,0);
+  const otherItems=(rt.other_reasons||[]).reduce((s,r)=>s+r.n,0);
 
   // fit rows
   const fitRow=(label,bv,mv,unit)=>{
@@ -377,12 +379,12 @@ function render(d, params){
       <div class="card good">
         <div class="k">Return rate · points lower</div>
         <div class="v num">${retValid?ppHTML:"—"}</div>
-        <div class="sup">Absolute gap: non-Ella ${pct(rt.non_ella_return_pct)} − followed-Ella ${rt.followed_orders>0?pct(rt.followed_return_pct):"—"}.</div>
+        <div class="sup">Absolute gap: other orders ${pct(rt.other_return_pct)} − followed-Ella ${rt.followed_orders>0?pct(rt.followed_return_pct):"—"}.</div>
       </div>
       <div class="card good">
         <div class="k">Return rate · relative reduction</div>
         <div class="v num">${retValid?relHTML:"—"}</div>
-        <div class="sup">Followers return about this much less often than non-Ella shoppers. Self-selected cohorts, not an A/B test.</div>
+        <div class="sup">Followers return about this much less often than everyone else. Self-selected cohorts, not an A/B test.</div>
       </div>
       <div class="card">
         <div class="k">Ella returns · followed Ella's size</div>
@@ -390,9 +392,9 @@ function render(d, params){
         <div class="sup">${rt.followed_returned} of ${rt.followed_orders} followed-size orders</div>
       </div>
       <div class="card">
-        <div class="k">Regular returns</div>
-        <div class="v num">${rt.non_ella_return_pct==null?"—":rt.non_ella_return_pct}<small>%</small></div>
-        <div class="sup">${rt.non_ella_returned} of ${rt.non_ella_orders} non-Ella orders</div>
+        <div class="k">Other orders · returns</div>
+        <div class="v num">${rt.other_return_pct==null?"—":rt.other_return_pct}<small>%</small></div>
+        <div class="sup">${rt.other_returned} of ${rt.other_orders} orders · non-Ella + Ella off-rec</div>
       </div>
     </div>
     <div class="grid g2" style="margin-top:16px">
@@ -400,13 +402,13 @@ function render(d, params){
         <div class="k">Ella (followed size) returns · reasons</div>
         <div class="sup" style="margin-top:12px">${nf(followedVal)} NOK · ${rt.followed_returned} order${rt.followed_returned===1?"":"s"} (${followedItems} item${followedItems===1?"":"s"})</div>
         ${pieChart(rt.followed_reasons)}
-        ${sizeRetTotal===0?`<div class="note-good">✓ Zero size-related returns among shoppers who followed Ella.</div>`:""}
+        ${followedSize===0?`<div class="note-good">✓ Zero size-related returns among shoppers who followed Ella.</div>`:""}
       </div>
       <div class="card">
-        <div class="k">Regular returns · reasons</div>
-        <div class="sup" style="margin-top:12px">${nf(nonEllaVal)} NOK · ${rt.non_ella_returned} order${rt.non_ella_returned===1?"":"s"} (${nonEllaItems} item${nonEllaItems===1?"":"s"})</div>
-        ${pieChart(rt.non_ella_reasons)}
-        ${sizeRetTotal>0?`<div class="sup" style="margin-top:12px">Every size-related return this period (<b>${sizeRetTotal}</b>) came from a shopper who did <b>not</b> use Ella.</div>`:""}
+        <div class="k">Other orders · reasons</div>
+        <div class="sup" style="margin-top:12px">non-Ella + Ella off-rec · ${nf(otherVal)} NOK · ${rt.other_returned} order${rt.other_returned===1?"":"s"} (${otherItems} item${otherItems===1?"":"s"})</div>
+        ${pieChart(rt.other_reasons)}
+        ${otherSize>0&&followedSize===0?`<div class="sup" style="margin-top:12px">All <b>${otherSize}</b> size-related return${otherSize===1?"":"s"} this period came from shoppers who didn't use Ella or didn't follow its size.</div>`:""}
       </div>
     </div>
   </section>
@@ -428,6 +430,7 @@ function render(d, params){
             ${fitRow("Height",B.height,M.height,"cm")}
             ${fitRow("Predicted waist",B.waist,M.waist,"cm")}
             ${fitRow("Predicted inseam",B.inseam,M.inseam,"cm")}
+            <tr><td>Most common shape</td><td class="val mB">${SHAPE(B.shape)}</td><td class="val mM">${SHAPE(M.shape)}</td></tr>
           </tbody>
         </table>
         <div class="sup" style="margin-top:12px">Waist &amp; inseam are model-predicted. Excludes profiles with impossible height/weight entries.</div>
@@ -438,6 +441,7 @@ function render(d, params){
   $("#foot").innerHTML = `
     <b>Definitions.</b> <b>Used Ask Ella</b> — order linked to a shopper who built an Ask Ella profile.
     <b>Bought a size Ella endorsed</b> — the order took the exact size Ella recommended, or (when flagged between two sizes) the adjacent size Ella named.
+    <b>Other orders</b> — every order that did not follow Ella's size: non-Ella orders plus Ella orders that bought a different size.
     <b>Opened → completed</b> — sessions finishing the profile ÷ sessions opening the widget.
     <b>Top products</b> — ranked by distinct shoppers who received a recommendation on each.<br>
     <b>Source.</b> Anthrospecs pilot database, partner halebob.no · ${fmtDate(d.range.from)} – ${fmtDate(d.range.to)} · currency NOK.
