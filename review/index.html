@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#16273F">
+<title>Ask Ella · Review</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;700&display=swap">
+<style>
+  :root{
+    --ink:#1a1a1a; --ink-soft:#5a5a5a; --ink-mute:#9a9a9a; --rule:#e2e2e2; --off:#f4f4f2; --white:#fff;
+    --blue-pale:#ddeef5; --blue-deep:#4a8fa8; --navy:#16273F;
+    --good:#2f7d5b; --good-soft:#eaf4ee; --amber:#9a5b12; --amber-soft:#fbf2e4;
+    --bad:#9c3030; --bad-soft:#f7ebeb;
+    --serif:"Cormorant Garamond",Georgia,serif;
+    --sans:"DM Sans",-apple-system,BlinkMacSystemFont,sans-serif;
+    --mono:"DM Mono",ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{font-family:var(--sans);font-weight:300;color:var(--ink);background:var(--off);line-height:1.55;-webkit-font-smoothing:antialiased}
+  h1,h2,h3{font-family:var(--serif);font-weight:400;margin:0;letter-spacing:.01em}
+  .mono{font-family:var(--mono)}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-mute)}
+  .wrap{max-width:1180px;margin:0 auto;padding:40px 5vw 90px}
+
+  header.top{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;border-bottom:1px solid var(--rule);padding-bottom:22px}
+  header.top h1{font-size:40px;line-height:1.02;margin-top:10px}
+  header.top h1 em{font-style:italic;color:var(--blue-deep)}
+  .top .meta{font-family:var(--mono);font-size:11px;color:var(--ink-mute);text-align:right;line-height:1.9}
+
+  /* gate */
+  .gate{max-width:420px;margin:16vh auto;background:var(--white);border:1px solid var(--rule);border-radius:6px;padding:34px 32px}
+  .gate h2{font-size:26px;margin-bottom:6px}
+  .gate p{font-size:13.5px;color:var(--ink-soft);margin:0 0 20px}
+  label{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-mute);margin-bottom:6px}
+  input[type=password],input[type=text],textarea{width:100%;font-family:var(--mono);font-size:13px;padding:11px 12px;border:1px solid var(--rule);border-radius:6px;color:var(--ink);background:var(--white)}
+  textarea{font-family:var(--sans);min-height:76px;resize:vertical}
+  .field+.field{margin-top:14px}
+  .btn{font-family:var(--mono);font-size:12px;letter-spacing:.06em;padding:11px 20px;border:0;border-radius:6px;background:var(--navy);color:#fff;cursor:pointer}
+  .btn:disabled{opacity:.5;cursor:default}
+  .btn.ghost{background:transparent;color:var(--ink-soft);border:1px solid var(--rule)}
+  .btn.good{background:var(--good)} .btn.warn{background:var(--amber)} .btn.bad{background:var(--bad)}
+  .err{color:var(--bad);font-size:12.5px;margin-top:12px;min-height:18px}
+  .hide{display:none!important}
+
+  /* layout */
+  .cols{display:grid;grid-template-columns:minmax(0,420px) minmax(0,1fr);gap:26px;margin-top:30px;align-items:start}
+  @media(max-width:900px){.cols{grid-template-columns:1fr}}
+  .panel{background:var(--white);border:1px solid var(--rule);border-radius:6px}
+  .panel>h3{font-size:20px;padding:18px 22px 14px;border-bottom:1px solid var(--rule)}
+
+  .shop{display:block;width:100%;text-align:left;background:transparent;border:0;border-bottom:1px solid var(--rule);padding:15px 22px;cursor:pointer;font-family:inherit}
+  .shop:last-child{border-bottom:0}
+  .shop:hover{background:var(--off)}
+  .shop[aria-current=true]{background:var(--blue-pale)}
+  .shop .d{font-size:14px;color:var(--ink);word-break:break-all}
+  .shop .s{font-family:var(--mono);font-size:11px;color:var(--ink-mute);margin-top:4px;display:flex;gap:10px;flex-wrap:wrap}
+
+  .pill{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:3px 9px;border-radius:999px}
+  .pill.pending{background:var(--amber-soft);color:var(--amber)}
+  .pill.approved{background:var(--good-soft);color:var(--good)}
+  .pill.changes_requested{background:var(--blue-pale);color:var(--blue-deep)}
+  .pill.suspended{background:var(--bad-soft);color:var(--bad)}
+  .pill.n{background:var(--bad-soft);color:var(--bad)}
+
+  .body{padding:22px}
+  .kv{display:grid;grid-template-columns:150px 1fr;gap:8px 16px;font-size:13.5px;margin-bottom:22px}
+  .kv dt{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-mute);padding-top:2px}
+  .kv dd{margin:0;color:var(--ink-soft);word-break:break-word}
+  .actions{display:flex;gap:9px;flex-wrap:wrap;margin:18px 0 6px}
+
+  .flag{border:1px solid var(--rule);border-radius:6px;padding:14px 16px;margin-bottom:10px}
+  .flag .h{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+  .flag .t{font-size:14px}
+  .flag .r{font-family:var(--mono);font-size:11.5px;color:var(--amber);margin-top:6px;line-height:1.6}
+  .flag .m{font-family:var(--mono);font-size:11px;color:var(--ink-mute);margin-top:6px;display:flex;gap:12px;flex-wrap:wrap}
+  .empty{font-size:13.5px;color:var(--ink-mute);padding:8px 0 4px}
+  .note{font-size:12.5px;color:var(--ink-mute);border-left:2px solid var(--blue-pale);padding-left:12px;margin:16px 0 0}
+</style>
+</head>
+<body>
+
+<!-- ───────────────── gate ───────────────── -->
+<div class="gate" id="gate">
+  <h2>Review</h2>
+  <p>Shops waiting on us before Ask Ella goes live on their storefront.</p>
+  <form id="gateForm">
+    <div class="field">
+      <label for="pw">Password</label>
+      <input id="pw" type="password" autocomplete="current-password" required>
+    </div>
+    <div class="field">
+      <label for="api">Service URL</label>
+      <input id="api" type="text" spellcheck="false">
+    </div>
+    <div style="margin-top:18px"><button class="btn" id="gateBtn" type="submit">Open</button></div>
+    <div class="err" id="gateErr"></div>
+  </form>
+  <p class="note">This page is unlisted, not protected. The password is what protects it, and it is checked by the service, not here.</p>
+</div>
+
+<!-- ───────────────── app ───────────────── -->
+<div class="wrap hide" id="app">
+  <header class="top">
+    <div>
+      <div class="eyebrow">Ask Ella</div>
+      <h1>Shops <em>in review</em></h1>
+    </div>
+    <div class="meta">
+      <div id="counts"></div>
+      <div><button class="btn ghost" id="refresh" style="padding:6px 14px;margin-top:6px">Refresh</button></div>
+    </div>
+  </header>
+
+  <div class="cols">
+    <div class="panel">
+      <h3>Queue</h3>
+      <div id="list"></div>
+    </div>
+    <div class="panel">
+      <h3 id="detailHead">Pick a shop</h3>
+      <div class="body" id="detail">
+        <div class="empty">Nothing selected.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* The service that holds the queue. Override it in the gate if the Shopify
+   sizing service is deployed somewhere other than this. */
+const DEFAULT_API = "https://sizing-api.onrender.com";
+let API = "", PW = "";
+try {
+  PW  = sessionStorage.getItem("ella_review_pw") || "";
+  API = localStorage.getItem("ella_review_api") || DEFAULT_API;
+} catch (e) { API = DEFAULT_API; }
+
+const $ = (s, el = document) => el.querySelector(s);
+const esc = (v) => String(v == null ? "" : v).replace(/[&<>"']/g,
+  (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const when = (d) => d ? new Date(d).toLocaleString("en-GB",
+  { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }) : "never";
+
+let SHOPS = [], CURRENT = null;
+
+async function call(path, body) {
+  const res = await fetch(API.replace(/\/+$/, "") + path, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(Object.assign({ password: PW }, body || {})),
+  });
+  if (res.status === 401) { const e = new Error("Wrong password"); e.code = 401; throw e; }
+  if (!res.ok) {
+    let detail = "";
+    try { detail = (await res.json()).detail || ""; } catch (_) {}
+    throw new Error(detail || ("Request failed (" + res.status + ")"));
+  }
+  return res.json();
+}
+
+/* ---------- gate ---------- */
+$("#api").value = API;
+$("#gateForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  PW = $("#pw").value;
+  API = $("#api").value.trim() || DEFAULT_API;
+  $("#gateErr").textContent = "";
+  $("#gateBtn").textContent = "Checking";
+  $("#gateBtn").disabled = true;
+  try {
+    await loadShops();
+    try {
+      sessionStorage.setItem("ella_review_pw", PW);
+      localStorage.setItem("ella_review_api", API);
+    } catch (_) {}
+    $("#gate").classList.add("hide");
+    $("#app").classList.remove("hide");
+  } catch (err) {
+    $("#gateErr").textContent = err.message;
+  } finally {
+    $("#gateBtn").textContent = "Open";
+    $("#gateBtn").disabled = false;
+  }
+});
+
+/* ---------- queue ---------- */
+async function loadShops() {
+  const out = await call("/review/shops");
+  SHOPS = out.shops || [];
+  renderList();
+  const pending = SHOPS.filter((s) => s.review_state === "pending").length;
+  const flags = SHOPS.reduce((n, s) => n + (s.open_flags || 0), 0);
+  $("#counts").innerHTML =
+    "<b>" + pending + "</b> waiting &middot; <b>" + flags + "</b> open flags &middot; " +
+    "<b>" + SHOPS.length + "</b> shops";
+}
+
+function renderList() {
+  const order = { pending: 0, changes_requested: 1, approved: 2, suspended: 3 };
+  const rows = SHOPS.slice().sort((a, b) =>
+    (order[a.review_state] ?? 9) - (order[b.review_state] ?? 9) ||
+    String(b.submitted_at || "").localeCompare(String(a.submitted_at || "")));
+
+  $("#list").innerHTML = rows.length ? rows.map((s) => `
+    <button class="shop" data-domain="${esc(s.shop_domain)}"
+            aria-current="${CURRENT === s.shop_domain}">
+      <div class="d">${esc(s.shop_name || s.shop_domain)}</div>
+      <div class="s">
+        <span class="pill ${esc(s.review_state)}">${esc(s.review_state.replace("_", " "))}</span>
+        ${s.open_flags ? `<span class="pill n">${s.open_flags} flag${s.open_flags === 1 ? "" : "s"}</span>` : ""}
+        <span>${s.submitted_at ? "sent " + when(s.submitted_at) : "step " + (s.onboarding_step || 0) + " of 4"}</span>
+      </div>
+    </button>`).join("") : `<div class="body"><div class="empty">No shops yet.</div></div>`;
+
+  $("#list").querySelectorAll(".shop").forEach((b) =>
+    b.addEventListener("click", () => openShop(b.dataset.domain)));
+}
+
+/* ---------- one shop ---------- */
+async function openShop(domain) {
+  CURRENT = domain;
+  renderList();
+  $("#detailHead").textContent = domain;
+  $("#detail").innerHTML = `<div class="empty">Loading</div>`;
+  try {
+    const out = await call("/review/flags", { shop_domain: domain });
+    renderDetail(out.shop, out.flags || []);
+  } catch (err) {
+    $("#detail").innerHTML = `<div class="err">${esc(err.message)}</div>`;
+  }
+}
+
+function renderDetail(shop, flags) {
+  const open = flags.filter((f) => f.state === "open");
+  const t = shop.theme || {};
+  const look = t.mode === "preset" ? (t.preset || "light") + " preset"
+    : t.mode === "custom" ? "custom " + [t.surface, t.accent, t.ink].filter(Boolean).join(" ")
+    : "theme colours";
+
+  $("#detail").innerHTML = `
+    <dl class="kv">
+      <dt>State</dt><dd><span class="pill ${esc(shop.review_state)}">${esc(shop.review_state.replace("_", " "))}</span></dd>
+      <dt>Sells</dt><dd>${esc(shop.scope)}</dd>
+      <dt>Size guide</dt><dd>${shop.size_guide_handle ? "/pages/" + esc(shop.size_guide_handle) : "none set"}</dd>
+      <dt>Look</dt><dd>${esc(look)}${t.trigger_style ? ", " + esc(t.trigger_style) + " " + esc(t.trigger_corners || "") : ""}</dd>
+      <dt>Setup</dt><dd>${shop.onboarding_step >= 4 ? "finished" : "stopped at step " + (shop.onboarding_step || 0) + " of 4"}</dd>
+      <dt>Sent for review</dt><dd>${when(shop.submitted_at)}</dd>
+    </dl>
+
+    <div class="field">
+      <label for="note">Note to leave on this decision</label>
+      <textarea id="note" placeholder="What you fixed, or what you need from them."></textarea>
+    </div>
+
+    <div class="actions">
+      <button class="btn good" data-decide="approved">Approve and go live</button>
+      <button class="btn warn" data-decide="changes_requested">Request changes</button>
+      <button class="btn ghost" data-decide="pending">Back to the queue</button>
+      <button class="btn bad" data-decide="suspended">Suspend</button>
+    </div>
+    <div class="err" id="decideErr"></div>
+
+    <h3 style="font-size:18px;margin-top:26px">Flagged products
+      <span class="mono" style="font-size:12px;color:var(--ink-mute)">${open.length} open, ${flags.length} total</span>
+    </h3>
+    <div style="margin-top:12px">
+      ${flags.length ? flags.map((f) => `
+        <div class="flag">
+          <div class="h">
+            <div>
+              <div class="t">${esc(f.product_handle || f.product_gid)}</div>
+              <div class="r">${esc(f.reason || "flagged, no reason recorded")}</div>
+              <div class="m">
+                <span>${esc(f.garment_type || "unknown type")}</span>
+                <span>${esc(f.chart_source || "no source")}${f.chart_basis ? " / " + esc(f.chart_basis) : ""}</span>
+                <span>${when(f.created_at)}</span>
+              </div>
+            </div>
+            <button class="btn ghost" style="padding:7px 14px;white-space:nowrap"
+              data-flag="${esc(f.id)}" data-state="${f.state === "open" ? "resolved" : "open"}">
+              ${f.state === "open" ? "Resolve" : "Reopen"}
+            </button>
+          </div>
+        </div>`).join("")
+      : `<div class="empty">No flags. Either the catalogue scan has not run for this shop, or every chart read cleanly.</div>`}
+    </div>
+
+    <p class="note">Approving rewrites the shop's storefront settings immediately, which is what actually turns the widget on.</p>`;
+
+  $("#detail").querySelectorAll("[data-decide]").forEach((b) =>
+    b.addEventListener("click", () => decide(shop.shop_domain, b.dataset.decide)));
+  $("#detail").querySelectorAll("[data-flag]").forEach((b) =>
+    b.addEventListener("click", () => flag(b.dataset.flag, b.dataset.state, shop.shop_domain)));
+}
+
+async function decide(domain, decision) {
+  const note = ($("#note") && $("#note").value.trim()) || null;
+  $("#decideErr").textContent = "";
+  $("#detail").querySelectorAll("button").forEach((b) => (b.disabled = true));
+  try {
+    const out = await call("/review/decide", { shop_domain: domain, decision, note });
+    if (out.storefront_config && out.storefront_config.ok === false) {
+      $("#decideErr").textContent =
+        "Saved, but the storefront settings did not update: " + out.storefront_config.error;
+    }
+    await loadShops();
+    await openShop(domain);
+  } catch (err) {
+    $("#decideErr").textContent = err.message;
+    $("#detail").querySelectorAll("button").forEach((b) => (b.disabled = false));
+  }
+}
+
+async function flag(id, state, domain) {
+  try {
+    await call("/review/flag", { flag_id: id, state });
+    await loadShops();
+    await openShop(domain);
+  } catch (err) {
+    alert(err.message);
+  }
+}
+
+$("#refresh").addEventListener("click", loadShops);
+
+/* Already signed in this tab? Go straight in. */
+if (PW) {
+  loadShops()
+    .then(() => { $("#gate").classList.add("hide"); $("#app").classList.remove("hide"); })
+    .catch(() => {});
+}
+</script>
+</body>
+</html>

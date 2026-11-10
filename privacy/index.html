@@ -407,10 +407,10 @@
               <thead><tr><th>Processing</th><th>Our role</th><th>Who decides why and how</th></tr></thead>
               <tbody>
                 <tr><td>Serving a size recommendation on a retailer&rsquo;s product page, and the fit analytics we return to that retailer</td><td><b>Processor</b></td><td>The retailer, as controller, under a written data processing agreement with us</td></tr>
-                <tr><td>Building and keeping your digital twin so you do not have to answer again &mdash; on that retailer&rsquo;s site or on any other shop that uses Ask Ella</td><td><b>Controller</b></td><td>Anthrospecs</td></tr>
+                <tr><td>Building and keeping your digital twin so you do not have to answer again on that retailer&rsquo;s site</td><td><b>Controller</b></td><td>Anthrospecs</td></tr>
                 <tr><td>Improving the sizing model from aggregated and de-identified fit outcomes</td><td><b>Controller</b></td><td>Anthrospecs</td></tr>
                 <tr><td>Keeping the service running, secure, and free of abuse</td><td><b>Controller</b></td><td>Anthrospecs</td></tr>
-                <tr><td>The Ask Ella browser extension, which you install yourself</td><td><b>Controller</b></td><td>Anthrospecs</td></tr>
+                <tr><td>The Ask Ella browser extension, which you install yourself, and the twin it keeps across the shops you visit with it</td><td><b>Controller</b></td><td>Anthrospecs</td></tr>
                 <tr><td>Our own websites and business contacts at retailers</td><td><b>Controller</b></td><td>Anthrospecs</td></tr>
               </tbody>
             </table>
@@ -439,14 +439,19 @@
           </div>
           <p>Your twin is stored against a random identifier generated on your device. It is not stored against your name, your email address, or your account at the shop, and we are not given those by the widget. Our standing engineering rule is that predicted measurements are never returned to the browser: the panel shows you a size and a sentence about the fit, not a list of your measurements.</p>
 
+          <p><b>A twin built by the widget does not travel between shops.</b> The identifier it is stored against lives in your browser&rsquo;s storage for that retailer&rsquo;s site only, and every twin we hold is filed under that retailer as well as that identifier. Visiting a different shop that uses Ask Ella means answering again, and the two twins are never joined. The only version of Ask Ella that carries one twin between shops is the browser extension, which you install yourself and can remove yourself.</p>
+
           <h3>4.2 Device and identifier data</h3>
           <div class="tablewrap">
             <table>
               <thead><tr><th>What</th><th>Detail</th></tr></thead>
               <tbody>
-                <tr><td><span class="mono">ella_user_id</span></td><td>A random identifier held in your browser&rsquo;s local storage, which links your device to your twin so you are not asked twice</td></tr>
+                <tr><td><span class="mono">ella_anon_id</span></td><td>A random identifier held in your browser&rsquo;s local storage, which links your device to your twin so you are not asked twice. It is generated on your device, it is not derived from anything about you, and it exists only for the site you are on.</td></tr>
+                <tr><td><span class="mono">ella_user_id</span></td><td>A flag in local storage recording that a twin exists for this device, so the panel can skip the questions and go straight to a size</td></tr>
                 <tr><td><span class="mono">ella_session_id</span></td><td>A random identifier held in local storage and in a first-party cookie on the retailer&rsquo;s domain, so that a recommendation can later be matched to a purchase or a return. Expires after 12 months.</td></tr>
-                <tr><td><span class="mono">ella_measurements</span></td><td>Your own answers, cached in your browser so the form comes back filled in. This copy stays on your device.</td></tr>
+                <tr><td><span class="mono">ella_measurements</span>, <span class="mono">ella_measurements_m</span></td><td>Your own answers, cached in your browser so the form comes back filled in. The second is the menswear version of the same thing. These copies stay on your device.</td></tr>
+                <tr><td><span class="mono">ella_once_&hellip;</span></td><td>A short-lived marker in local storage recording that we have already counted an event this session, so opening the panel twice is not counted twice</td></tr>
+                <tr><td><span class="mono">ella_imp_&hellip;</span></td><td>The same idea for the count of times the button was shown, held in session storage and gone when you close the tab</td></tr>
                 <tr><td>Technical data</td><td>Browser and operating system version, screen size band, language, the shop&rsquo;s domain, and the URL of the product page you asked about</td></tr>
                 <tr><td>Network data</td><td>Your IP address, used to serve the request, to apply rate limits and to infer the country you are in. We truncate it before it reaches any analytics store and we do not use it to locate you more precisely than country.</td></tr>
               </tbody>
@@ -494,7 +499,8 @@
               <thead><tr><th>Why we process</th><th>What we use</th><th>Legal basis</th></tr></thead>
               <tbody>
                 <tr><td>To answer the question you asked: what size am I in this garment</td><td>Body and fit data, product data</td><td><b>Consent</b>, Article 6(1)(a). You give it by completing the questions and asking for a size; you can withdraw it at any time.</td></tr>
-                <tr><td>To keep your twin so you are not asked again, here or on another shop</td><td>Body and fit data, <span class="mono">ella_user_id</span></td><td><b>Consent</b>, Article 6(1)(a)</td></tr>
+                <tr><td>To keep your twin so you are not asked again on this retailer&rsquo;s site</td><td>Body and fit data, the identifiers in <a href="#data" class="link ul">section 4.2</a></td><td><b>Consent</b>, Article 6(1)(a)</td></tr>
+                <tr><td>To keep one twin across the shops you visit, if you installed the browser extension</td><td>Body and fit data, the extension&rsquo;s own identifier</td><td><b>Consent</b>, Article 6(1)(a)</td></tr>
                 <tr><td>To store and read the identifiers on your device</td><td>Local storage, first-party cookie</td><td><b>Consent</b> under the UK Privacy and Electronic Communications Regulations and Article 5(3) of the ePrivacy Directive &mdash; see <a href="#storage" class="link ul">section 8</a></td></tr>
                 <tr><td>To measure whether the widget works and report to the retailer in aggregate</td><td>Interaction data, identifiers</td><td><b>Legitimate interests</b>, Article 6(1)(f): running and improving a service people choose to use. We weighed this against your interests and limited it to pseudonymous event counts.</td></tr>
                 <tr><td>To improve the sizing model</td><td>Aggregated, de-identified fit outcomes</td><td><b>Legitimate interests</b>, Article 6(1)(f), with individual-level data removed from the training set</td></tr>
@@ -509,7 +515,7 @@
 
         <section id="storage">
           <h2>8. Consent and storage on your device</h2>
-          <p>Ask Ella writes three things to your browser&rsquo;s local storage and sets one first-party cookie, all listed in <a href="#data" class="link ul">section 4.2</a>. None of them is strictly necessary to display the page you are on, so under the UK PECR and the ePrivacy Directive they require your consent before they are set.</p>
+          <p>Ask Ella writes to your browser&rsquo;s local storage and session storage and sets one first-party cookie. Everything it writes is listed in <a href="#data" class="link ul">section 4.2</a>. None of it is strictly necessary to display the page you are on, so under the UK PECR and the ePrivacy Directive it requires your consent before it is set. All of it is scoped to the site you are on: a shop cannot read what Ask Ella wrote on another shop, and neither can we.</p>
           <p>How that consent is obtained depends on where you met the widget:</p>
           <ul class="plain">
             <li><b>On a retailer&rsquo;s site</b>, the retailer&rsquo;s own consent banner is the mechanism. We require every retailer, by contract, to obtain valid consent for Ask Ella&rsquo;s storage and to honour a refusal. Where consent has not been given, the widget runs without writing the identifiers: you can still get a size, but you will be asked the questions again next time, and we cannot connect that recommendation to a later purchase or return.</li>
@@ -583,7 +589,7 @@
                 <tr><td>Device identifiers in your browser</td><td><span class="mono">ella_session_id</span> cookie: 12 months. Local storage: until you clear it or delete your twin.</td><td>Expires or is cleared</td></tr>
                 <tr><td>Interaction events</td><td>14 months at event level</td><td>Aggregated into counts with no identifiers, which we keep indefinitely</td></tr>
                 <tr><td>Fit outcomes, including returns data where a retailer sends it</td><td>24 months linked to an identifier</td><td>De-identified and retained in aggregate</td></tr>
-                <tr><td>Interpreted product and size-chart data</td><td>90 days, and refreshed whenever the retailer changes the product</td><td>Replaced</td></tr>
+                <tr><td>The retailer&rsquo;s product and size-chart data</td><td><b>Not stored.</b> A product&rsquo;s size chart is read from the retailer&rsquo;s own store at the moment you ask, used to answer, and held in memory for at most 10 minutes so that asking twice does not fetch it twice.</td><td>Discarded</td></tr>
                 <tr><td>Security and access logs</td><td>12 months</td><td>Deleted</td></tr>
                 <tr><td>Data we hold as a processor for a retailer</td><td>For the term of our contract with them</td><td>Deleted or returned within 30 days of the end of the contract, on their instruction</td></tr>
                 <tr><td>Retailer contracts, invoices and accounting records</td><td>7 years from the end of the relevant financial year</td><td>Deleted</td></tr>
