@@ -93,10 +93,6 @@
       <label for="pw">Password</label>
       <input id="pw" type="password" autocomplete="current-password" required>
     </div>
-    <div class="field">
-      <label for="api">Service URL</label>
-      <input id="api" type="text" spellcheck="false">
-    </div>
     <div style="margin-top:18px"><button class="btn" id="gateBtn" type="submit">Open</button></div>
     <div class="err" id="gateErr"></div>
   </form>
@@ -131,14 +127,17 @@
 </div>
 
 <script>
-/* The service that holds the queue. Override it in the gate if the Shopify
-   sizing service is deployed somewhere other than this. */
-const DEFAULT_API = "https://sizing-api.onrender.com";
-let API = "", PW = "";
+/* The Shopify sizing service, which holds the queue. Hardcoded on purpose:
+   it is the same every time, and sizing-api.onrender.com (which used to sit
+   here) is the Hale Bob / HeySavi deployment — a different service with a
+   different database. For local testing only, override with ?api=http://... */
+const DEFAULT_API = "https://askella-sizing.onrender.com";
+let API = DEFAULT_API, PW = "";
 try {
-  PW  = sessionStorage.getItem("ella_review_pw") || "";
-  API = localStorage.getItem("ella_review_api") || DEFAULT_API;
-} catch (e) { API = DEFAULT_API; }
+  const q = new URLSearchParams(location.search).get("api");
+  if (q) API = q;
+  PW = sessionStorage.getItem("ella_review_pw") || "";
+} catch (e) { /* fine */ }
 
 const $ = (s, el = document) => el.querySelector(s);
 const esc = (v) => String(v == null ? "" : v).replace(/[&<>"']/g,
@@ -164,11 +163,9 @@ async function call(path, body) {
 }
 
 /* ---------- gate ---------- */
-$("#api").value = API;
 $("#gateForm").addEventListener("submit", async (e) => {
   e.preventDefault();
   PW = $("#pw").value;
-  API = $("#api").value.trim() || DEFAULT_API;
   $("#gateErr").textContent = "";
   $("#gateBtn").textContent = "Checking";
   $("#gateBtn").disabled = true;
@@ -176,7 +173,7 @@ $("#gateForm").addEventListener("submit", async (e) => {
     await loadShops();
     try {
       sessionStorage.setItem("ella_review_pw", PW);
-      localStorage.setItem("ella_review_api", API);
+      localStorage.removeItem("ella_review_api"); // stale pre-hardcode override
     } catch (_) {}
     $("#gate").classList.add("hide");
     $("#app").classList.remove("hide");
