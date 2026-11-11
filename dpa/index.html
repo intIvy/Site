@@ -335,7 +335,7 @@
       <ul class="glance-list" style="margin:0;padding:0;list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:16px 34px;">
         <li><b>You are the controller, we are your processor</b> for shopper data. You decide Ask Ella runs on your store; we only do what you instruct.</li>
         <li><b>We hold no shopper identity.</b> No name, email, address, phone or Shopify customer id. A twin sits against a random identifier generated in the shopper&rsquo;s own browser.</li>
-        <li><b>Stored in the EU.</b> Database in Ireland, application in Frankfurt. The language model gets garment text only and no shopper data at all.</li>
+        <li><b>Stored in the EU, and nowhere else.</b> Database in Ireland, application in Frankfurt. Every sub-processor that touches shopper data is in the EU.</li>
         <li><b>Deletion is automatic.</b> Twins at two years of inactivity, events at 14 months, outcomes aggregated at 24 months. Scheduled jobs, not good intentions. See <a href="#annex1" class="link" style="text-decoration:underline;text-underline-offset:2px;">Annex 1.7</a>.</li>
         <li><b>Breaches reach you in 48 hours</b>, so your own 72-hour clock is not spent waiting on ours.</li>
         <li><b>Body measurements</b> are not Article 9 data in the UK or EU, and we treat them as consumer health data under Washington&rsquo;s law anyway. <a href="#roles" class="link" style="text-decoration:underline;text-underline-offset:2px;">Clause 2.4</a>.</li>
@@ -467,7 +467,7 @@
           <p><b>11.2</b> Anthrospecs is established in the United Kingdom. The European Commission renewed its adequacy decision for the United Kingdom on 19 December 2025, in force until 27 December 2031, so a transfer of Shopper Data from the EEA to Anthrospecs requires no additional safeguard for so long as that decision stands.</p>
           <p><b>11.3</b> If that adequacy decision is suspended, withdrawn or allowed to lapse, the parties will without undue delay enter into the standard contractual clauses adopted by the European Commission, Module Two, which are on that event incorporated into this agreement by reference and completed as follows: you are the data exporter and Anthrospecs the data importer; Annex 1 of this agreement serves as Annex I; Annex 2 as Annex II; Annex 3 as Annex III; the optional docking clause applies; the governing law and forum are those of clause 17.</p>
           <p><b>11.4</b> Where you are established outside the United Kingdom and the EEA, and a transfer from us to you of Shopper Data would be a restricted transfer, the parties will enter into the International Data Transfer Addendum to the standard contractual clauses issued by the Information Commissioner, or the standard contractual clauses Module Four, as appropriate.</p>
-          <p><b>11.5</b> The language model Sub-processor in Annex 3 processes in the United States and receives <b>no</b> Shopper Data of any kind. It receives garment text only: product names, categories, fabric content, care instructions, descriptions and size charts. No transfer of personal data arises from it.</p>
+          <p><b>11.5</b> No Sub-processor in Annex 3 processes Shopper Data outside the European Union.</p>
         </section>
 
         <section id="deletion">
@@ -602,7 +602,6 @@
               <tbody>
                 <tr><td>Supabase</td><td>Database and storage</td><td>Ireland, on AWS</td><td>All Shopper Data that is stored</td></tr>
                 <tr><td>Render</td><td>Application hosting</td><td>Frankfurt, Germany</td><td>Requests in transit, application logs, IP addresses</td></tr>
-                <tr><td>Anthropic</td><td>Interpreting product descriptions and size charts</td><td>United States</td><td>Garment text only. <b>No Shopper Data of any kind.</b> Currently disabled.</td></tr>
                 <tr><td><span class="tbd">[TO BE NAMED]</span></td><td>Error and performance monitoring</td><td><span class="tbd">[TO BE NAMED]</span></td><td>Stack traces and request context, which can include an IP address</td></tr>
               </tbody>
             </table>
