@@ -53,6 +53,24 @@
   .panel{background:var(--white);border:1px solid var(--rule);border-radius:6px}
   .panel>h3{font-size:20px;padding:18px 22px 14px;border-bottom:1px solid var(--rule)}
 
+  .fixpanel{border:1px solid var(--rule);border-radius:10px;padding:16px 18px;margin-top:22px;background:#FBFCFD}
+  .fixpanel .h3{font-size:15px;font-weight:500;margin-bottom:10px}
+  .fixpanel .row{display:flex;gap:8px;align-items:center;margin-top:8px;flex-wrap:wrap}
+  .fixpanel label{font-size:12.5px;color:var(--ink-mute);min-width:150px}
+  .fixpanel input,.fixpanel select{font-family:inherit;font-size:13px;padding:6px 9px;
+    border:1px solid var(--rule);border-radius:6px;background:#fff;min-width:170px}
+  .fixpanel .note{margin:4px 0 0 0}
+  .linkbtn{background:none;border:0;cursor:pointer;font:inherit;padding:0 0 0 5px;color:inherit;opacity:.6}
+  .flag.group{border-left:3px solid var(--ink)}
+  .ovrbar{display:flex;flex-wrap:wrap;gap:6px;align-items:center;
+    padding:10px 0 2px;margin-top:10px;border-top:1px dashed var(--rule)}
+  .btn.ovr{padding:5px 11px;font-size:12px}
+  .btn.ovr.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .tabs{display:flex;gap:2px;padding:10px 14px 0;border-bottom:1px solid var(--rule)}
+  .tab{appearance:none;background:transparent;border:0;border-bottom:2px solid transparent;
+    font-family:inherit;font-size:13px;color:var(--ink-mute);padding:8px 12px 10px;cursor:pointer}
+  .tab .mono{font-family:var(--mono);font-size:11px;opacity:.75;margin-left:4px}
+  .tab.on{color:var(--ink);border-bottom-color:var(--ink);font-weight:500}
   .shop{display:block;width:100%;text-align:left;background:transparent;border:0;border-bottom:1px solid var(--rule);padding:15px 22px;cursor:pointer;font-family:inherit}
   .shop:last-child{border-bottom:0}
   .shop:hover{background:var(--off)}
@@ -115,6 +133,7 @@
   <div class="cols">
     <div class="panel">
       <h3>Queue</h3>
+      <div id="tabs" class="tabs"></div>
       <div id="list"></div>
     </div>
     <div class="panel">
@@ -197,9 +216,34 @@ async function loadShops() {
     "<b>" + SHOPS.length + "</b> shops";
 }
 
+let TAB = "new";
+
+// Two different jobs wearing the same clothes. A brand that has never been
+// reviewed needs reading end to end. A brand already live whose catalogue has
+// changed needs only the new flags looked at. Mixing them in one list means
+// the second kind is never done, because it never looks urgent.
+function bucket(s) {
+  if (!s.reviewed_at) return "new";
+  if (s.review_state === "pending" || s.open_flags) return "updates";
+  return "settled";
+}
+
+function renderTabs() {
+  const n = { new: 0, updates: 0, settled: 0 };
+  SHOPS.forEach((s) => { n[bucket(s)]++; });
+  const label = { new: "New brands", updates: "Updates", settled: "Settled" };
+  $("#tabs").innerHTML = ["new", "updates", "settled"].map((k) => `
+    <button class="tab${TAB === k ? " on" : ""}" data-tab="${k}">
+      ${label[k]} <span class="mono">${n[k]}</span>
+    </button>`).join("");
+  $("#tabs").querySelectorAll("[data-tab]").forEach((b) =>
+    b.addEventListener("click", () => { TAB = b.dataset.tab; renderList(); }));
+}
+
 function renderList() {
+  renderTabs();
   const order = { pending: 0, changes_requested: 1, approved: 2, suspended: 3 };
-  const rows = SHOPS.slice().sort((a, b) =>
+  const rows = SHOPS.filter((s) => bucket(s) === TAB).slice().sort((a, b) =>
     (order[a.review_state] ?? 9) - (order[b.review_state] ?? 9) ||
     String(b.submitted_at || "").localeCompare(String(a.submitted_at || "")));
 
@@ -210,9 +254,13 @@ function renderList() {
       <div class="s">
         <span class="pill ${esc(s.review_state)}">${esc(s.review_state.replace("_", " "))}</span>
         ${s.open_flags ? `<span class="pill n">${s.open_flags} flag${s.open_flags === 1 ? "" : "s"}</span>` : ""}
+        ${s.submitted_at && !s.scan_finished_at ? `<span class="pill n">unscanned</span>` : ""}
         <span>${s.submitted_at ? "sent " + when(s.submitted_at) : "step " + (s.onboarding_step || 0) + " of 4"}</span>
       </div>
-    </button>`).join("") : `<div class="body"><div class="empty">No shops yet.</div></div>`;
+    </button>`).join("") : `<div class="body"><div class="empty">${
+      TAB === "new" ? "No new brands waiting."
+      : TAB === "updates" ? "Nothing changed since the last sweep."
+      : "Nothing settled yet."}</div></div>`;
 
   $("#list").querySelectorAll(".shop").forEach((b) =>
     b.addEventListener("click", () => openShop(b.dataset.domain)));
@@ -226,13 +274,43 @@ async function openShop(domain) {
   $("#detail").innerHTML = `<div class="empty">Loading</div>`;
   try {
     const out = await call("/review/flags", { shop_domain: domain });
-    renderDetail(out.shop, out.flags || []);
+    renderDetail(out.shop, out.flags || [], out.overrides || [],
+                 out.groups || [], out.families || []);
   } catch (err) {
     $("#detail").innerHTML = `<div class="err">${esc(err.message)}</div>`;
   }
 }
 
-function renderDetail(shop, flags) {
+// A shop whose catalogue was never read is not a shop with no problems. Say
+// which of the two it is, every time.
+function scanLine(shop) {
+  const st = shop.scan_stats || {};
+  if (shop.scan_error) {
+    return `<span class="pill n">failed</span> ${esc(shop.scan_error)}`
+      + (shop.scan_finished_at ? ", " + when(shop.scan_finished_at) : "");
+  }
+  if (shop.scan_started_at && !shop.scan_finished_at) {
+    const mins = (Date.now() - new Date(shop.scan_started_at).getTime()) / 60000;
+    if (mins > 20) {
+      return `<span class="pill n">stalled</span> started ${when(shop.scan_started_at)}`
+        + ` and never finished, most likely a restart. Re-scan.`;
+    }
+    return `<span class="pill">running</span> started ${when(shop.scan_started_at)}`;
+  }
+  if (!shop.scan_finished_at) return `<span class="pill n">never run</span>`;
+  const bits = [
+    `${st.products ?? "?"} products`,
+    `${st.sizeable ?? "?"} sizeable`,
+    `${st.flagged ?? 0} flagged`,
+  ];
+  if (st.out_of_scope) bits.push(`${st.out_of_scope} out of scope`);
+  if (st.unsized) bits.push(`${st.unsized} unsized`);
+  return esc(bits.join(", ")) + ", " + when(shop.scan_finished_at);
+}
+
+function renderDetail(shop, flags, overrides, groups, families) {
+  const OV = {};
+  (overrides || []).forEach((o) => { OV[String(o.product_gid)] = o; });
   const open = flags.filter((f) => f.state === "open");
   const t = shop.theme || {};
   const look = t.mode === "preset" ? (t.preset || "light") + " preset"
@@ -247,7 +325,13 @@ function renderDetail(shop, flags) {
       <dt>Look</dt><dd>${esc(look)}${t.trigger_style ? ", " + esc(t.trigger_style) + " " + esc(t.trigger_corners || "") : ""}</dd>
       <dt>Setup</dt><dd>${shop.onboarding_step >= 4 ? "finished" : "stopped at step " + (shop.onboarding_step || 0) + " of 4"}</dd>
       <dt>Sent for review</dt><dd>${when(shop.submitted_at)}</dd>
+      <dt>Catalogue scan</dt><dd>${scanLine(shop)}</dd>
     </dl>
+
+    <div class="actions" style="margin-top:-6px">
+      <button class="btn ghost" id="rescan">Re-scan the catalogue</button>
+      <span class="mono" style="font-size:12px;color:var(--ink-mute);align-self:center" id="rescanMsg"></span>
+    </div>
 
     <div class="field">
       <label for="note">Note to leave on this decision</label>
@@ -262,10 +346,23 @@ function renderDetail(shop, flags) {
     </div>
     <div class="err" id="decideErr"></div>
 
-    <h3 style="font-size:18px;margin-top:26px">Flagged products
-      <span class="mono" style="font-size:12px;color:var(--ink-mute)">${open.length} open, ${flags.length} total</span>
+    ${shopFixPanel(shop, families)}
+
+    <h3 style="font-size:18px;margin-top:26px">What needs fixing
+      <span class="mono" style="font-size:12px;color:var(--ink-mute)">${
+        (groups || []).reduce((n, g) => n + (g.count || 0), 0)
+      } open across ${(groups || []).length} cause${(groups || []).length === 1 ? "" : "s"}</span>
     </h3>
+    <p class="note" style="margin-top:4px">Products sharing a verdict, a chart source and a garment type are fixed by the same decision, so they are one row of work.</p>
     <div style="margin-top:12px">
+      ${(groups || []).map((g, i) => groupCard(g, i)).join("")}
+    </div>
+
+    <details style="margin-top:22px">
+      <summary class="mono" style="font-size:12px;color:var(--ink-mute);cursor:pointer">
+        Every flag, one by one (${flags.length})
+      </summary>
+      <div style="margin-top:12px">
       ${flags.length ? flags.map((f) => `
         <div class="flag">
           <div class="h">
@@ -283,9 +380,13 @@ function renderDetail(shop, flags) {
               ${f.state === "open" ? "Resolve" : "Reopen"}
             </button>
           </div>
+          ${overrideBar(f, OV[String(f.product_gid)])}
         </div>`).join("")
-      : `<div class="empty">No flags. Either the catalogue scan has not run for this shop, or every chart read cleanly.</div>`}
-    </div>
+      : `<div class="empty">${shop.scan_finished_at && !shop.scan_error
+            ? "No flags. The scan read every chart and found nothing to fix."
+            : "No flags, and no completed scan. Nothing here has been checked yet."}</div>`}
+      </div>
+    </details>
 
     <p class="note">Approving rewrites the shop's storefront settings immediately, which is what actually turns the widget on.</p>`;
 
@@ -293,6 +394,195 @@ function renderDetail(shop, flags) {
     b.addEventListener("click", () => decide(shop.shop_domain, b.dataset.decide)));
   $("#detail").querySelectorAll("[data-flag]").forEach((b) =>
     b.addEventListener("click", () => flag(b.dataset.flag, b.dataset.state, shop.shop_domain)));
+  $("#detail").querySelectorAll("[data-bulk]").forEach((b) =>
+    b.addEventListener("click", () =>
+      bulkOverride(shop.shop_domain, b.dataset.gids, b.dataset.bulk, b)));
+  const sg = $("#saveGuide");
+  if (sg) sg.addEventListener("click", () =>
+    shopChart(shop.shop_domain, { size_guide_handle: $("#guide").value }, sg));
+  const sf = $("#setFamily");
+  if (sf) sf.addEventListener("click", () => {
+    const raw = prompt("Paste the size chart for every " + $("#fam").value + " garment.");
+    if (!raw) return;
+    shopChart(shop.shop_domain, { family: $("#fam").value, chart_raw: raw }, sf);
+  });
+  $("#detail").querySelectorAll("[data-clearfam]").forEach((b) =>
+    b.addEventListener("click", () =>
+      shopChart(shop.shop_domain, { clear_family: b.dataset.clearfam }, b)));
+  $("#detail").querySelectorAll("[data-ovr]").forEach((b) =>
+    b.addEventListener("click", () =>
+      setOverride(shop.shop_domain, b.dataset.gid, b.dataset.ovr, b)));
+  const rb = $("#rescan");
+  if (rb) rb.addEventListener("click", () => rescan(shop.shop_domain, rb));
+}
+
+async function rescan(domain, btn) {
+  const msg = $("#rescanMsg");
+  btn.disabled = true;
+  msg.textContent = "starting...";
+  try {
+    await call("/review/rescan", { shop_domain: domain });
+    msg.textContent = "running. Reopen this shop in a minute to see the result.";
+  } catch (e) {
+    msg.textContent = String(e.message || e);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+const FAMILIES = ["default", "dress", "top", "knit", "skirt", "trousers",
+  "jeans", "shorts", "outerwear", "casual_shirt", "formal_shirt", "suit",
+  "suit_jacket"];
+
+// Most of a flagged catalogue is fixed here rather than product by product.
+// A store with no size guide set produces one finding, not two hundred.
+function shopFixPanel(shop, families) {
+  const set = (families || []);
+  return `
+    <div class="fixpanel">
+      <div class="h3">Fix the whole store</div>
+      <div class="row">
+        <label for="guide">Size guide page handle</label>
+        <input id="guide" type="text" placeholder="size-guide"
+               value="${esc(shop.size_guide_handle || "")}">
+        <button class="btn ghost" id="saveGuide">Save</button>
+      </div>
+      <p class="note">Where the resolver looks when a product has no chart of its own. Just the handle, not the full URL.</p>
+      <div class="row">
+        <label for="fam">Chart for every</label>
+        <select id="fam">${FAMILIES.map((f) =>
+          `<option value="${f}">${f === "default" ? "garment (default)" : esc(f.replace("_", " "))}</option>`).join("")}</select>
+        <button class="btn ghost" id="setFamily">Paste a chart...</button>
+      </div>
+      <p class="note">Applies to every garment of that kind with no chart of its own. Validated before it is saved.</p>
+      ${set.length ? `<div class="row" style="gap:6px;flex-wrap:wrap">
+        <span class="mono" style="font-size:11px;color:var(--ink-mute)">Set:</span>
+        ${set.map((f) => `<span class="pill">${esc(f)}
+          <button class="linkbtn" data-clearfam="${esc(f)}" title="Remove">&times;</button></span>`).join("")}
+      </div>` : ""}
+      <div class="err" id="fixErr"></div>
+    </div>`;
+}
+
+function groupCard(g, i) {
+  const gids = (g.product_gids || []).join(",");
+  const btn = (action, label, title) => `
+    <button class="btn ghost ovr" data-bulk="${action}" data-gids="${esc(gids)}"
+            title="${esc(title)}">${label}</button>`;
+  return `
+    <div class="flag group">
+      <div class="h">
+        <div>
+          <div class="t">${g.count} product${g.count === 1 ? "" : "s"}
+            <span class="pill n">${esc(String(g.outcome || "flagged").replace("_", " "))}</span>
+          </div>
+          <div class="r">${esc((g.reasons && g.reasons[0]) || "no reason recorded")}</div>
+          <div class="m">
+            <span>${esc(g.garment_type || "unknown type")}</span>
+            <span>chart source: ${esc(g.chart_source || "none")}</span>
+          </div>
+        </div>
+      </div>
+      <div class="ovrbar">
+        <span class="mono" style="font-size:11px;color:var(--ink-mute)">All ${g.count}:</span>
+        ${btn("suppress", "Don't offer", "Ask Ella never appears on any of these")}
+        ${btn("shop_guide", "Use shop guide", "Read the store size guide for all of these")}
+        ${btn("page", "Use a page...", "Read one named page for all of these")}
+        ${btn("chart", "Paste a chart...", "One chart for all of these. Validated before saving.")}
+        ${g.outcome === "needs_review" ? btn("accept", "Accept all", "You have looked and they are fine") : ""}
+      </div>
+      ${(g.products || []).length ? `<details style="margin-top:8px">
+        <summary class="mono" style="font-size:11px;color:var(--ink-mute);cursor:pointer">
+          Which products</summary>
+        <div class="mono" style="font-size:11px;color:var(--ink-mute);margin-top:6px;line-height:1.7">
+          ${g.products.map((p) => esc(p.product_handle || p.product_gid)).join(", ")}
+          ${g.count > g.products.length ? ` and ${g.count - g.products.length} more` : ""}
+        </div>
+      </details>` : ""}
+    </div>`;
+}
+
+async function bulkOverride(domain, gids, action, btn) {
+  const body = { shop_domain: domain, product_gids: gids.split(","), action };
+  if (action === "page") {
+    const h = prompt("Page handle holding the chart for all of these");
+    if (!h) return;
+    body.page_handle = h.trim().replace(/^\/*pages\/*/, "");
+  }
+  if (action === "chart") {
+    const raw = prompt(`Paste one size chart for all ${body.product_gids.length} products.`);
+    if (!raw) return;
+    body.chart_raw = raw;
+  }
+  if (!confirm(`Apply "${action}" to ${body.product_gids.length} products?`)) return;
+  btn.disabled = true;
+  try {
+    const out = await call("/review/override/bulk", body);
+    if (out.failed && out.failed.length) {
+      alert(`${out.applied} applied, ${out.failed.length} failed. First: ${out.failed[0].error}`);
+    }
+    await openShop(domain);
+  } catch (e) {
+    alert(String(e.message || e));
+    btn.disabled = false;
+  }
+}
+
+async function shopChart(domain, payload, btn) {
+  const err = $("#fixErr");
+  if (err) err.textContent = "";
+  if (btn) btn.disabled = true;
+  try {
+    await call("/review/shop-chart", { shop_domain: domain, ...payload });
+    await openShop(domain);
+  } catch (e) {
+    if (err) err.textContent = String(e.message || e);
+    else alert(String(e.message || e));
+    if (btn) btn.disabled = false;
+  }
+}
+
+// Resolving a flag only ever set a state, and the next scan raised the same
+// product again. These are the decisions that change what the widget does.
+function overrideBar(f, current) {
+  const gid = esc(String(f.product_gid));
+  const on = current ? esc(current.action) : "";
+  const btn = (action, label, title) => `
+    <button class="btn ghost ovr${on === action ? " on" : ""}"
+      data-ovr="${action}" data-gid="${gid}" title="${esc(title)}">${label}</button>`;
+  return `
+    <div class="ovrbar">
+      ${on ? `<span class="pill">${on.replace("_", " ")}</span>` : ""}
+      ${btn("suppress", "Don't offer here", "Ask Ella never appears on this product")}
+      ${btn("shop_guide", "Use shop guide", "Ignore this product's own sources and read the store size guide")}
+      ${btn("page", "Use a page...", "Read the chart from a page you name")}
+      ${btn("chart", "Paste a chart...", "Paste a size chart. It is validated before it is saved.")}
+      ${f.reason && f.reason.indexOf("needs_review") === 0
+        ? btn("accept", "Accept as is", "The validator wants a look and you have given it one") : ""}
+      ${on ? btn("clear", "Undo", "Remove this override and let resolution run normally") : ""}
+    </div>`;
+}
+
+async function setOverride(domain, gid, action, btn) {
+  const body = { shop_domain: domain, product_gid: gid, action };
+  if (action === "page") {
+    const h = prompt("Page handle holding the chart, for example size-guide");
+    if (!h) return;
+    body.page_handle = h.trim().replace(/^\/*pages\/*/, "");
+  }
+  if (action === "chart") {
+    const raw = prompt("Paste the size chart. An HTML table or tab separated rows.");
+    if (!raw) return;
+    body.chart_raw = raw;
+  }
+  btn.disabled = true;
+  try {
+    await call("/review/override", body);
+    await openShop(domain);
+  } catch (e) {
+    alert(String(e.message || e));
+    btn.disabled = false;
+  }
 }
 
 async function decide(domain, decision) {
