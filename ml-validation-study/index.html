@@ -347,7 +347,7 @@
    Women's keys: model1_women.py TARGETS · Men's keys: model1_men.py TARGETS
 */
 const CONFIG = {
-  MODEL1_URL: "",
+  MODEL1_URL: "https://askella-sizing.onrender.com/research/model1",
   FORM_ACTION: "https://docs.google.com/forms/d/e/1FAIpQLScg32jjrTUEcTvY_3B1xSDPu8Cdmb2-KLdl004F6cDJnOpUNA/formResponse",
   ENTRIES: {
     subject_id: "entry.461448694",
@@ -535,6 +535,7 @@ let SEX = "female";
 let ACTIVE = "height_cm";
 let LOCKED = false;
 let PRED = null;          // model output
+let MODEL_VERSION = "";   // which Model 1 build produced PRED
 let FLAGS = {};           // key -> bool
 
 const measList = () => SEXES[SEX].map(([k, info, draw]) => ({
@@ -751,8 +752,10 @@ async function fetchPredictions(input) {
   }
   if (!CONFIG.MODEL1_URL) throw new Error("Model 1 endpoint isn't connected yet.");
   const res = await fetch(CONFIG.MODEL1_URL, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(input) });
+  if (res.status === 429) throw new Error("Too many requests from this device. Wait a few minutes, then retry.");
   if (!res.ok) throw new Error("Model 1 returned " + res.status + ".");
   const j = await res.json();
+  MODEL_VERSION = j.model_version || "";
   return j.measurements || j;
 }
 
@@ -849,7 +852,7 @@ function buildRecord() {
     const base = x.m.k.replace(/_cm$/, "");
     rec[base + "_r1"] = x.r[0]; rec[base + "_r2"] = x.r[1]; rec[base + "_model"] = x.model == null ? "" : x.model;
   });
-  rec.payload = JSON.stringify({ ...rec, payload: undefined, model_input: modelInput(), model_output: PRED, page_version: 1 });
+  rec.payload = JSON.stringify({ ...rec, payload: undefined, model_input: modelInput(), model_output: PRED, model_version: MODEL_VERSION, page_version: 1 });
   return rec;
 }
 
