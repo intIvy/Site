@@ -51,6 +51,13 @@
   .protocol li{margin:4px 0}
   .protocol b{color:var(--ink);font-weight:500}
 
+  /* consent */
+  .consent a{color:var(--blue-deep)}
+  .agree{display:flex;gap:12px;align-items:flex-start;font-size:15px;color:var(--ink);cursor:pointer;padding:14px 16px;border:1px solid var(--rule);border-radius:4px;background:var(--off)}
+  .agree input{width:18px;height:18px;margin:2px 0 0;flex:none;accent-color:var(--navy)}
+  .agree.err{border-color:var(--bad);box-shadow:0 0 0 3px rgba(156,48,48,.12)}
+  .consent.locked{opacity:.75;pointer-events:none}
+
   /* session fields */
   .grid{display:grid;gap:16px}
   .g3{grid-template-columns:repeat(3,1fr)}
@@ -196,7 +203,14 @@
   <section class="step" id="step1">
     <div class="step-head"><span class="n">01</span><h2>Measure the participant</h2><span class="sub">participant present</span></div>
 
-    <div class="card protocol">
+    <div class="card consent" id="consentCard">
+      <h3>Consent</h3>
+      <p class="hint">Before any measurements, the participant reads the <a href="consent/" target="_blank" rel="noopener">consent form</a> (opens in a new tab), ticks the box and types their full name. No signature needed.</p>
+      <label class="agree"><input type="checkbox" id="consentBox"> <span>I have read the <a href="consent/" target="_blank" rel="noopener">participant information and consent form</a>, I'm 18 or over, and I agree to take part in this study.</span></label>
+      <label class="f" style="max-width:420px;margin-top:16px">Participant full name<input id="participant" autocomplete="off"></label>
+    </div>
+
+    <div class="card protocol" style="margin-top:16px">
       <div class="eyebrow">Standard procedure</div>
       <ul>
         <li><b>Take every measurement twice.</b> Re-position the tape between readings, don't just re-read it. If the two readings differ by more than 1 cm, take both again.</li>
@@ -212,7 +226,7 @@
 
         <div class="card">
           <h3>Session</h3>
-          <p class="hint">The subject number is generated for you. Note it on the paper consent form.</p>
+          <p class="hint">The subject number is generated for you.</p>
           <div class="grid g3">
             <label class="f">Researcher name<input id="researcher" autocomplete="name" required></label>
             <label class="f">Date<input id="date" type="date" required></label>
@@ -231,7 +245,7 @@
                 <label><input type="radio" name="sex" value="male">Male</label>
               </div>
             </div>
-            <label class="f" style="width:110px">Age (years)<input id="age" type="number" inputmode="numeric" min="16" max="100" step="1"></label>
+            <label class="f" style="width:110px">Age (years)<input id="age" type="number" inputmode="numeric" min="18" max="100" step="1"></label>
           </div>
 
           <table class="mt" style="margin-top:20px">
@@ -409,6 +423,7 @@ const CONFIG = {
   REPEAT_CM: 1,         // reading 1 vs reading 2: warn above this
 };
 
+const CONSENT_VERSION = "v1 · 18 Nov 2026";
 const MOCK = new URLSearchParams(location.search).has("mock");
 const $ = (s, el = document) => el.querySelector(s);
 const esc = (v) => String(v == null ? "" : v).replace(/[&<>"']/g, (c) => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
@@ -657,7 +672,7 @@ $("#shapes").innerHTML = SHAPES.map(([v, n, d]) =>
 document.addEventListener("input", (e) => {
   const t = e.target;
   if (t.matches("input[data-k]")) { updateMean(t.closest("tr")); t.classList.remove("err"); }
-  if (t.matches("#researcher,#age,#date")) t.classList.remove("err");
+  if (t.matches("#researcher,#age,#date,#participant")) t.classList.remove("err");
 });
 document.addEventListener("focusin", (e) => { const tr = e.target.closest && e.target.closest("tr[data-k]"); if (tr && !LOCKED) setActive(tr.dataset.k); });
 document.addEventListener("click", (e) => { const tr = e.target.closest && e.target.closest(".mt tr[data-k]"); if (tr && !LOCKED) setActive(tr.dataset.k); });
@@ -666,14 +681,18 @@ document.querySelectorAll('input[name="sex"]').forEach((r) => r.addEventListener
   renderForm(true);
 }));
 $("#shapes").addEventListener("change", () => $("#shapes").classList.remove("err"));
+$("#consentBox").addEventListener("change", () => { $(".agree").classList.remove("err"); if ($("#consentBox").checked) CONSENT_AT = new Date().toISOString(); });
+let CONSENT_AT = "";
 
 function validate() {
   const errs = [];
   const mark = (el) => { el.classList.add("err"); errs.push(el); };
+  if (!$("#consentBox").checked) { $(".agree").classList.add("err"); errs.push($(".agree")); }
+  if ($("#participant").value.trim().length < 2) mark($("#participant"));
   if (!$("#researcher").value.trim()) mark($("#researcher"));
   if (!$("#date").value) mark($("#date"));
   const age = +$("#age").value;
-  if (!$("#age").value || age < 16 || age > 100) mark($("#age"));
+  if (!$("#age").value || age < 18 || age > 100) mark($("#age"));
   const range = { weight_kg: [30, 250], height_cm: [120, 230] };
   document.querySelectorAll("input[data-k]").forEach((inp) => {
     const [lo, hi] = range[inp.dataset.k] || [2, 220];
@@ -707,6 +726,8 @@ $("#nextBtn").addEventListener("click", () => {
 function lockStep1() {
   LOCKED = true;
   $("#s1fields").disabled = true;
+  $("#consentBox").disabled = true; $("#participant").disabled = true;
+  $("#consentCard").classList.add("locked");
   $("#s1actions").classList.add("hide");
   document.querySelectorAll(".shapes label,.seg label").forEach((l) => (l.style.cursor = "default"));
 }
@@ -810,7 +831,9 @@ function buildRecord() {
   const r = collectReadings();
   const rows = rowsForResults();
   const rec = {
-    subject_id: $("#subject").value, researcher: $("#researcher").value.trim(), date: $("#date").value,
+    subject_id: $("#subject").value, participant_name: $("#participant").value.trim(),
+    consent: $("#consentBox").checked ? "yes" : "no", consent_at: CONSENT_AT, consent_version: CONSENT_VERSION,
+    researcher: $("#researcher").value.trim(), date: $("#date").value,
     sex: SEX, age: $("#age").value,
     height_r1: r.height_cm[0], height_r2: r.height_cm[1], weight_r1: r.weight_kg[0], weight_r2: r.weight_kg[1],
     body_shape: SEX === "female" ? modelInput().shape : "",
