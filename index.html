@@ -452,6 +452,19 @@ a { color:inherit; }
 .cta-title { font-family:'Cormorant Garamond',serif; font-size:clamp(2.2rem,4vw,3.4rem); font-weight:300; line-height:1.12; margin-bottom:0.5rem; max-width:600px; text-align:center; }
 .cta-title em { font-style:italic; color:var(--blue-deep); display:block; }
 .cta-sub { font-size:0.82rem; color:var(--ink-soft); margin-bottom:2.4rem; }
+.sf { border-top:1px solid rgba(22,39,63,.12); background:#fff; }
+.sf-inner { max-width:1200px; margin:0 auto; padding:56px 56px 40px; display:grid; grid-template-columns:1.5fr 1fr 1fr 1.4fr; gap:40px; }
+.sf-logo { display:inline-flex; align-items:center; gap:10px; text-decoration:none; color:#16273F; }
+.sf-logo img { display:block; }
+.sf-logo span { font-family:Spectral,'Cormorant Garamond',serif; font-size:20px; font-weight:500; letter-spacing:-.01em; }
+.sf-tag { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:17px; line-height:1.4; color:#4a8fa8; margin:14px 0 0; max-width:26ch; }
+.sf-col { display:flex; flex-direction:column; gap:11px; }
+.sf-h { font-family:'DM Mono',monospace; font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:#16273F; margin-bottom:4px; }
+.sf-col a { font-family:'DM Sans',sans-serif; font-size:14px; line-height:1.4; color:#7A8894; text-decoration:none; transition:color .15s; }
+.sf-col a:hover { color:#16273F; }
+.sf-bottom { max-width:1200px; margin:0 auto; padding:20px 56px 28px; border-top:1px solid rgba(22,39,63,.08); display:flex; justify-content:space-between; align-items:center; font-family:'DM Mono',monospace; font-size:12px; color:#9a9a9a; }
+@media (max-width:900px) { .sf-inner { grid-template-columns:1fr 1fr; padding:44px 28px 32px; } .sf-brand { grid-column:1 / -1; } .sf-bottom { padding:18px 28px 24px; } }
+@media (max-width:520px) { .sf-inner { grid-template-columns:1fr; gap:30px; } }
 .site-footer { padding:2.2rem 6vw; border-top:1px solid var(--rule); display:flex; justify-content:space-between; align-items:center; background:var(--white); flex-wrap:wrap; gap:1rem; }
 .footer-left { display:flex; align-items:center; gap:1.4rem; }
 .footer-brand { font-family:'DM Mono',monospace; font-size:0.56rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--ink-mute); }
@@ -484,8 +497,6 @@ a { color:inherit; }
   .dc-product { grid-template-columns:1fr !important; min-height:0 !important; }
   .dc-img-panel { min-height:230px !important; }
   .dc-info-panel { border-left:none !important; border-top:1px solid #e2e2e2 !important; position:static !important; }
-  footer > div { grid-template-columns:1fr !important; justify-items:center !important; gap:14px !important; padding:26px 20px !important; text-align:center; }
-  footer > div > * { justify-self:center !important; }
 }
 .dc-browser { width:100%; border-radius:10px; overflow:hidden; box-shadow:0 20px 60px rgba(0,0,0,0.13),0 4px 16px rgba(0,0,0,0.06); background:#fff; position:relative; }
 .dc-bar { background:#f0f0f0; padding:0.65rem 0.9rem; display:flex; align-items:center; gap:0.7rem; border-bottom:1px solid #ddd; }
@@ -743,24 +754,44 @@ a { color:inherit; }
     </form>
   </section>
 
-  <footer style="border-top:1px solid rgba(22,39,63,.12);">
-    <div style="max-width:1200px;margin:0 auto;padding:32px 56px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;">
-      <span class="mono" style="font-size:12px;color:#7A8894;justify-self:start;">© 2026 Anthrospecs. All rights reserved.</span>
-      <svg width="28" height="28" sc-camel-view-box="0 0 28 28" fill="none" style="justify-self:center;">
+  <footer class="sf">
+    <div class="sf-inner">
+      <div class="sf-brand">
+        <a href="index.html" class="sf-logo">
+          <img src="assets/logo.png" alt="" width="32" height="32">
+          <span>Anthrospecs</span>
+        </a>
+        <p class="sf-tag">Your true size on any brand, powered by sizing science.</p>
+      </div>
+      <nav class="sf-col" aria-label="Company">
+        <div class="sf-h">Company</div>
+        <a href="partners/">For Brands</a>
+        <a href="#waitlist">Join waitlist</a>
+        <a href="https://www.linkedin.com/company/anthrospecs" target="_blank" rel="noopener">LinkedIn ↗</a>
+      </nav>
+      <nav class="sf-col" aria-label="Team">
+        <div class="sf-h">Team</div>
+        <a href="marketing-interns/" rel="nofollow">Marketing Interns</a>
+        <a href="ml-validation-study/" rel="nofollow">ML Validation Study</a>
+      </nav>
+      <!-- The Washington link is deliberately its own, separate link: the My
+           Health My Data Act requires a distinct homepage link to the stand-alone
+           consumer health data policy, not a provision inside the main one. -->
+      <nav class="sf-col" aria-label="Legal">
+        <div class="sf-h">Legal</div>
+        <a href="privacy/">Privacy Policy</a>
+        <a href="privacy/washington/">Washington Consumer Health Data Privacy Policy</a>
+        <a href="terms/">Terms of Service</a>
+        <a href="dpa/">Data Processing Agreement</a>
+      </nav>
+    </div>
+    <div class="sf-bottom">
+      <span>© 2026 Anthrospecs Ltd. All rights reserved.</span>
+      <svg width="22" height="22" viewBox="0 0 28 28" fill="none" aria-hidden="true">
         <ellipse cx="14" cy="14" rx="12" ry="11" stroke="#8ab8cc" stroke-width="1.3" transform="rotate(-8 14 14)"></ellipse>
         <ellipse cx="14" cy="14" rx="8" ry="7" stroke="#8ab8cc" stroke-width="1.1" transform="rotate(-2 14 14)"></ellipse>
         <ellipse cx="14" cy="14" rx="4" ry="3.6" stroke="#8ab8cc" stroke-width="0.9" transform="rotate(3 14 14)"></ellipse>
       </svg>
-      <a href="https://www.linkedin.com/company/anthrospecs" target="_blank" class="mono" style="font-size:12px;color:#7A8894;text-decoration:none;justify-self:end;">Follow on LinkedIn →</a>
-    </div>
-    <!-- The Washington link is deliberately its own, separate link: the My
-         Health My Data Act requires a distinct homepage link to the stand-alone
-         consumer health data policy, not a provision inside the main one. -->
-    <div style="max-width:1200px;margin:0 auto;padding:0 56px 28px;display:flex;flex-wrap:wrap;gap:10px 28px;justify-content:center;">
-      <a href="privacy/" class="mono" style="font-size:12px;color:#7A8894;text-decoration:none;">Privacy Policy</a>
-      <a href="privacy/washington/" class="mono" style="font-size:12px;color:#7A8894;text-decoration:none;">Washington Consumer Health Data Privacy Policy</a>
-      <a href="terms/" class="mono" style="font-size:12px;color:#7A8894;text-decoration:none;">Terms of Service</a>
-      <a href="dpa/" class="mono" style="font-size:12px;color:#7A8894;text-decoration:none;">Data Processing Agreement</a>
     </div>
   </footer>
 
