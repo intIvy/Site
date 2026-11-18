@@ -44,6 +44,16 @@
   .week.active{display:block}
   .week-head{border-bottom:1px solid var(--rule);padding-bottom:14px;margin-bottom:24px}
   .week-head h2{font-size:32px;margin-top:6px}
+  .week-head h2 em{font-style:italic;color:var(--blue-deep)}
+  .photo{margin:0 0 30px}
+  .photo img{display:block;width:100%;max-height:440px;object-fit:cover;border-radius:4px;border:1px solid var(--rule)}
+  .brief p{font-size:16px;color:var(--ink);max-width:68ch;margin:12px 0 0}
+  .tasks{list-style:none;counter-reset:t;padding:0;margin:14px 0 0;border-top:1px solid var(--rule)}
+  .tasks li{counter-increment:t;display:grid;grid-template-columns:44px 190px 1fr;gap:14px;padding:16px 0;border-bottom:1px solid var(--rule);align-items:baseline}
+  .tasks li::before{content:counter(t,decimal-leading-zero);font-family:var(--mono);font-size:12px;color:var(--blue-deep)}
+  .tasks .t{font-family:var(--serif);font-size:20px}
+  .tasks .d{font-size:14.5px;color:var(--ink-soft)}
+  @media(max-width:760px){ .tasks li{grid-template-columns:34px 1fr} .tasks .d{grid-column:2} }
   .empty{font-family:var(--mono);font-size:12px;color:var(--ink-mute);letter-spacing:.04em;padding:40px 0}
 
   @media(max-width:760px){
@@ -73,8 +83,23 @@
 
       <!-- ───── Week 1 ───── -->
       <section class="week" id="week-1">
-        <div class="week-head"><div class="eyebrow">Week 01</div><h2>Week 1</h2></div>
-        <p class="empty">Content coming soon.</p>
+        <div class="week-head"><div class="eyebrow">Week 01</div><h2>Intros &amp; <em>lit review</em></h2></div>
+
+        <figure class="photo"><img src="week1-team.jpg" alt="Team gathered around a screen of fashion imagery, reviewing a moodboard"></figure>
+
+        <div class="brief">
+          <div class="eyebrow">The brief</div>
+          <p>Before we decide how Anthrospecs should sound, we want to know what has already worked. This week is a deep dive into marketing campaigns from fashion tech companies that came before us. Look beyond fashion too. Some of the best references will come from other industries.</p>
+          <p>Look for the posts and campaigns that made people stop scrolling. Then work out why they worked.</p>
+        </div>
+
+        <div class="eyebrow" style="margin-top:34px">Deliverables</div>
+        <ol class="tasks">
+          <li><span class="t">Moodboard</span><span class="d">Collect the posts and campaigns you found into one board. Include the source and the brand for each.</span></li>
+          <li><span class="t">What made them work</span><span class="d">For each piece, write a short note on why it was successful. Think about the hook, the visuals, the timing and the audience.</span></li>
+          <li><span class="t">Voice outline</span><span class="d">Write a rough outline of the voice you'd give Anthrospecs: how it sounds, what it would and wouldn't say, and two or three brands it sits near.</span></li>
+          <li><span class="t">Post ideas</span><span class="d">Pitch a couple of posts you'd like to make, with a line on the idea, the format and where it would run.</span></li>
+        </ol>
       </section>
 
       <!-- ───── Week 2 ───── -->
