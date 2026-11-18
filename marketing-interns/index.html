@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#16273F">
+<title>Ask Ella · Marketing Interns</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;700&display=swap">
+<style>
+  :root{
+    --ink:#1a1a1a; --ink-soft:#5a5a5a; --ink-mute:#9a9a9a; --rule:#e2e2e2; --off:#f4f4f2; --white:#fff;
+    --blue-pale:#ddeef5; --blue-light:#c4dcea; --blue-mid:#8ab8cc; --blue-deep:#4a8fa8; --navy:#16273F;
+    --serif:"Cormorant Garamond",Georgia,serif;
+    --sans:"DM Sans",-apple-system,BlinkMacSystemFont,sans-serif;
+    --mono:"DM Mono",ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{font-family:var(--sans);font-weight:300;color:var(--ink);background:var(--off);line-height:1.55;-webkit-font-smoothing:antialiased}
+  h1,h2,h3{font-family:var(--serif);font-weight:400;margin:0;letter-spacing:.01em}
+  .eyebrow{font-family:var(--mono);font-weight:400;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-mute)}
+  .wrap{max-width:1180px;margin:0 auto;padding:40px 5vw 90px}
+
+  header.top{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;border-bottom:1px solid var(--rule);padding-bottom:22px}
+  header.top h1{font-size:40px;line-height:1.02;margin-top:10px}
+  header.top h1 em{font-style:italic;color:var(--blue-deep)}
+  .top .meta{font-family:var(--mono);font-size:11px;color:var(--ink-mute);text-align:right;line-height:1.9;letter-spacing:.04em}
+
+  .layout{display:grid;grid-template-columns:200px 1fr;gap:36px;margin-top:34px;align-items:start}
+  nav.weeks{position:sticky;top:24px;display:flex;flex-direction:column;gap:4px}
+  nav.weeks a{display:flex;align-items:center;justify-content:space-between;text-decoration:none;
+    font-family:var(--mono);font-size:12.5px;letter-spacing:.06em;color:var(--ink-soft);
+    padding:11px 16px;border-radius:4px;border:1px solid transparent;border-left:2px solid transparent;transition:.15s}
+  nav.weeks a:hover{background:var(--white);border-color:var(--rule);color:var(--ink)}
+  nav.weeks a[aria-current="page"]{background:var(--white);border-color:var(--rule);border-left-color:var(--blue-deep);color:var(--navy);font-weight:500}
+  nav.weeks a .n{color:var(--ink-mute);font-size:11px}
+  nav.weeks a[aria-current="page"] .n{color:var(--blue-deep)}
+
+  main.panel{background:var(--white);border:1px solid var(--rule);border-radius:4px;padding:36px 40px;min-height:460px}
+  .week{display:none}
+  .week.active{display:block}
+  .week-head{border-bottom:1px solid var(--rule);padding-bottom:14px;margin-bottom:24px}
+  .week-head h2{font-size:32px;margin-top:6px}
+  .empty{font-family:var(--mono);font-size:12px;color:var(--ink-mute);letter-spacing:.04em;padding:40px 0}
+
+  @media(max-width:760px){
+    .layout{grid-template-columns:1fr;gap:20px}
+    nav.weeks{position:static;flex-direction:row;overflow-x:auto;gap:6px;padding-bottom:4px}
+    nav.weeks a{white-space:nowrap;border-left-width:1px;border-bottom:2px solid transparent}
+    nav.weeks a[aria-current="page"]{border-left-color:var(--rule);border-bottom-color:var(--blue-deep)}
+    nav.weeks a .n{display:none}
+    main.panel{padding:26px 22px}
+  }
+  @media(prefers-reduced-motion:reduce){ nav.weeks a{transition:none} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <div class="eyebrow">Ask Ella</div>
+      <h1>Marketing <em>interns</em></h1>
+    </div>
+    <div class="meta"><div>8-week programme</div></div>
+  </header>
+
+  <div class="layout">
+    <nav class="weeks" id="weeks" aria-label="Weeks"></nav>
+    <main class="panel" id="panel">
+
+      <!-- ───── Week 1 ───── -->
+      <section class="week" id="week-1">
+        <div class="week-head"><div class="eyebrow">Week 01</div><h2>Week 1</h2></div>
+        <p class="empty">Content coming soon.</p>
+      </section>
+
+      <!-- ───── Week 2 ───── -->
+      <section class="week" id="week-2">
+        <div class="week-head"><div class="eyebrow">Week 02</div><h2>Week 2</h2></div>
+        <p class="empty">Content coming soon.</p>
+      </section>
+
+      <!-- ───── Week 3 ───── -->
+      <section class="week" id="week-3">
+        <div class="week-head"><div class="eyebrow">Week 03</div><h2>Week 3</h2></div>
+        <p class="empty">Content coming soon.</p>
+      </section>
+
+      <!-- ───── Week 4 ───── -->
+      <section class="week" id="week-4">
+        <div class="week-head"><div class="eyebrow">Week 04</div><h2>Week 4</h2></div>
+        <p class="empty">Content coming soon.</p>
+      </section>
+
+      <!-- ───── Week 5 ───── -->
+      <section class="week" id="week-5">
+        <div class="week-head"><div class="eyebrow">Week 05</div><h2>Week 5</h2></div>
+        <p class="empty">Content coming soon.</p>
+      </section>
+
+      <!-- ───── Week 6 ───── -->
+      <section class="week" id="week-6">
+        <div class="week-head"><div class="eyebrow">Week 06</div><h2>Week 6</h2></div>
+        <p class="empty">Content coming soon.</p>
+      </section>
+
+      <!-- ───── Week 7 ───── -->
+      <section class="week" id="week-7">
+        <div class="week-head"><div class="eyebrow">Week 07</div><h2>Week 7</h2></div>
+        <p class="empty">Content coming soon.</p>
+      </section>
+
+      <!-- ───── Week 8 ───── -->
+      <section class="week" id="week-8">
+        <div class="week-head"><div class="eyebrow">Week 08</div><h2>Week 8</h2></div>
+        <p class="empty">Content coming soon.</p>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<script>
+(function(){
+  var nav = document.getElementById('weeks');
+  var weeks = document.querySelectorAll('.week');
+  weeks.forEach(function(w, i){
+    var a = document.createElement('a');
+    a.href = '#' + w.id;
+    a.innerHTML = 'Week ' + (i+1) + '<span class="n">0' + (i+1) + '</span>';
+    nav.appendChild(a);
+  });
+  function show(){
+    var id = (location.hash || '#week-1').slice(1);
+    if (!document.getElementById(id)) id = 'week-1';
+    weeks.forEach(function(w){ w.classList.toggle('active', w.id === id); });
+    nav.querySelectorAll('a').forEach(function(a){
+      if (a.getAttribute('href') === '#' + id) a.setAttribute('aria-current','page');
+      else a.removeAttribute('aria-current');
+    });
+  }
+  nav.addEventListener('click', function(e){
+    var a = e.target.closest('a'); if (!a) return;
+    e.preventDefault();
+    history.replaceState(null, '', a.getAttribute('href'));
+    show();
+    window.scrollTo({top:0});
+  });
+  window.addEventListener('hashchange', show);
+  show();
+})();
+</script>
+</body>
+</html>
