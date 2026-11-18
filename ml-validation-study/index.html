@@ -11,7 +11,10 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;700&display=swap">
 <style>
   :root{
-    --ink:#1a1a1a; --ink-mute:#9a9a9a; --rule:#e2e2e2; --off:#f4f4f2; --blue-deep:#4a8fa8;
+    --ink:#1a1a1a; --ink-soft:#5a5a5a; --ink-mute:#9a9a9a; --rule:#e2e2e2; --off:#f4f4f2; --white:#fff;
+    --blue-pale:#ddeef5; --blue-light:#c4dcea; --blue-mid:#8ab8cc; --blue-deep:#4a8fa8; --navy:#16273F;
+    --good:#2f7d5b; --good-soft:#eaf4ee; --amber:#9a5b12; --amber-soft:#fbf2e4;
+    --bad:#9c3030; --bad-soft:#f7ebeb;
     --serif:"Cormorant Garamond",Georgia,serif;
     --sans:"DM Sans",-apple-system,BlinkMacSystemFont,sans-serif;
     --mono:"DM Mono",ui-monospace,monospace;
@@ -19,19 +22,784 @@
   *{box-sizing:border-box}
   html,body{margin:0}
   body{font-family:var(--sans);font-weight:300;color:var(--ink);background:var(--off);line-height:1.55;-webkit-font-smoothing:antialiased}
-  h1{font-family:var(--serif);font-weight:400;margin:0;letter-spacing:.01em;font-size:40px;line-height:1.02;margin-top:10px}
-  h1 em{font-style:italic;color:var(--blue-deep)}
+  h1,h2,h3{font-family:var(--serif);font-weight:400;margin:0;letter-spacing:.01em}
   .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-mute)}
-  .wrap{max-width:1080px;margin:0 auto;padding:40px 6vw 80px}
-  header.top{border-bottom:1px solid var(--rule);padding-bottom:22px}
+  .mono{font-family:var(--mono)}
+  .num{font-variant-numeric:tabular-nums}
+  .wrap{max-width:1240px;margin:0 auto;padding:40px 4vw 90px}
+  .hide{display:none !important}
+
+  header.top{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;border-bottom:1px solid var(--rule);padding-bottom:22px}
+  header.top h1{font-size:40px;line-height:1.02;margin-top:10px}
+  header.top h1 em{font-style:italic;color:var(--blue-deep)}
+  .top .meta{font-family:var(--mono);font-size:11px;color:var(--ink-mute);text-align:right;line-height:1.9;letter-spacing:.04em}
+
+  /* steps */
+  .step{margin-top:38px}
+  .step-head{display:flex;align-items:baseline;gap:14px;border-bottom:1px solid var(--rule);padding-bottom:10px;margin-bottom:22px}
+  .step-head .n{font-family:var(--mono);font-size:12px;color:var(--blue-deep)}
+  .step-head h2{font-size:28px}
+  .step-head .sub{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--ink-mute);letter-spacing:.04em}
+  .card{background:var(--white);border:1px solid var(--rule);border-radius:4px;padding:24px 26px}
+  .card + .card{margin-top:16px}
+  .card h3{font-size:21px;margin-bottom:4px}
+  .card .hint{font-size:13.5px;color:var(--ink-soft);margin:0 0 16px}
+
+  /* protocol */
+  .protocol{background:linear-gradient(135deg,var(--blue-pale),var(--white) 70%);border-color:var(--blue-light)}
+  .protocol ul{margin:10px 0 0;padding-left:18px;font-size:14px;color:var(--ink-soft)}
+  .protocol li{margin:4px 0}
+  .protocol b{color:var(--ink);font-weight:500}
+
+  /* session fields */
+  .grid{display:grid;gap:16px}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  .g4{grid-template-columns:repeat(4,1fr)}
+  label.f{display:flex;flex-direction:column;gap:6px;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-mute)}
+  input,textarea,select{font-family:var(--sans);font-size:15px;font-weight:400;color:var(--ink);background:var(--white);
+    border:1px solid var(--rule);border-radius:4px;padding:10px 12px;width:100%;transition:border-color .15s, box-shadow .15s}
+  input:focus,textarea:focus{outline:none;border-color:var(--blue-deep);box-shadow:0 0 0 3px rgba(74,143,168,.18)}
+  input[readonly]{background:var(--off);color:var(--navy);font-family:var(--mono);font-size:14px}
+  input:disabled,textarea:disabled{background:var(--off);color:var(--ink-soft)}
+  input.err{border-color:var(--bad);box-shadow:0 0 0 3px rgba(156,48,48,.12)}
+
+  .seg{display:inline-flex;border:1px solid var(--rule);border-radius:999px;overflow:hidden;background:var(--white)}
+  .seg label{font-family:var(--mono);font-size:12px;letter-spacing:.04em;color:var(--ink-soft);padding:10px 20px;cursor:pointer;position:relative}
+  .seg label+label{border-left:1px solid var(--rule)}
+  .seg input{position:absolute;opacity:0;pointer-events:none;width:1px}
+  .seg label:has(input:checked){background:var(--navy);color:#fff}
+  .seg.err{border-color:var(--bad)}
+
+  .shapes{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+  .shapes label{border:1px solid var(--rule);border-radius:4px;padding:12px 8px 10px;text-align:center;cursor:pointer;font-size:13px;color:var(--ink-soft);transition:.15s;background:var(--white)}
+  .shapes label:hover{border-color:var(--blue-mid)}
+  .shapes input{position:absolute;opacity:0;pointer-events:none}
+  .shapes label:has(input:checked){border-color:var(--blue-deep);box-shadow:0 0 0 2px rgba(74,143,168,.35);color:var(--navy)}
+  .shapes svg{display:block;margin:0 auto 6px}
+  .shapes.err label{border-color:var(--bad)}
+
+  /* step 1 layout */
+  .s1{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:24px;align-items:start}
+  .side{position:sticky;top:18px}
+
+  /* measurement table */
+  table{width:100%;border-collapse:collapse}
+  th{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-mute);font-weight:400;text-align:left;padding:0 8px 10px;border-bottom:1px solid var(--rule)}
+  td{padding:9px 8px;border-bottom:1px solid var(--rule);vertical-align:middle;font-size:14px}
+  .mt tr{transition:background .12s}
+  .mt tbody tr:hover,.mt tbody tr.active{background:#f8fbfc}
+  .mt tbody tr.active td:first-child{box-shadow:inset 2px 0 0 var(--blue-deep)}
+  .mt .idx{font-family:var(--mono);font-size:11px;color:var(--blue-deep);width:30px}
+  .mt .nm{font-weight:400}
+  .mt .nm small{display:block;color:var(--ink-mute);font-size:12px;font-weight:300;line-height:1.35;margin-top:2px}
+  .mt td.in{width:96px}
+  .mt td.in input{padding:8px 9px;font-variant-numeric:tabular-nums;text-align:right}
+  .mt .mean{font-family:var(--mono);font-size:13px;color:var(--navy);width:70px;text-align:right}
+  .mt .warn{display:block;font-family:var(--mono);font-size:10px;color:var(--amber);letter-spacing:.02em;margin-top:3px;text-align:right}
+
+  /* mannequin */
+  .mq{padding:18px 18px 20px}
+  .mq-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+  .pill{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;border-radius:999px;background:var(--blue-pale);color:var(--blue-deep)}
+  .pill.back{background:var(--amber-soft);color:var(--amber)}
+  svg.fig{display:block;width:100%;height:auto;max-height:62vh}
+  .fig .body{fill:#eef4f7;stroke:var(--blue-mid);stroke-width:1.1}
+  .fig .floor{stroke:var(--rule);stroke-width:1}
+  .fig .m{fill:none;stroke:var(--blue-light);stroke-width:1.2;stroke-linecap:round;opacity:.9;transition:stroke .15s, stroke-width .15s, opacity .15s}
+  .fig .m.dash{stroke-dasharray:4 3}
+  .fig .tick{stroke:var(--blue-light);stroke-width:.8;stroke-dasharray:2 3;fill:none}
+  .fig g.on .m{stroke:var(--blue-deep);stroke-width:2.6;opacity:1}
+  .fig g.on .tick{stroke:var(--blue-deep);stroke-width:1}
+  .fig g.on .dot{fill:var(--blue-deep)}
+  .fig .dot{fill:var(--blue-light)}
+  .fig .lbl{display:none}
+  .fig g.on .lbl{display:block}
+  .fig .lbl rect{fill:var(--navy)}
+  .fig .lbl text{fill:#fff;font-family:var(--mono);font-size:9.5px;letter-spacing:.04em}
+  .fig.dim g:not(.on) .m{opacity:.55}
+  .how{border-top:1px solid var(--rule);margin-top:10px;padding-top:14px}
+  .how h4{font-family:var(--serif);font-size:21px;font-weight:400;margin:2px 0 6px}
+  .how p{font-size:13.5px;color:var(--ink-soft);margin:0}
+  .how .tip{margin-top:8px;font-size:12.5px;color:var(--ink-mute)}
+
+  /* buttons */
+  .actions{display:flex;justify-content:flex-end;align-items:center;gap:16px;margin-top:22px}
+  .actions .msg{font-size:13px;color:var(--bad)}
+  .btn{font-family:var(--sans);font-size:14.5px;font-weight:500;border:0;border-radius:999px;background:var(--navy);color:#fff;padding:12px 26px;cursor:pointer;transition:.15s}
+  .btn:hover{background:#0f1c2e}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .btn.ghost{background:transparent;color:var(--navy);border:1px solid var(--rule)}
+  .btn.ghost:hover{border-color:var(--navy)}
+
+  /* handoff */
+  .done{display:flex;gap:16px;align-items:flex-start;background:linear-gradient(135deg,var(--good-soft),var(--white) 70%);border-color:#cfe6da}
+  .done .tick-ic{flex:none;width:34px;height:34px;border-radius:999px;background:var(--good);display:grid;place-items:center}
+  .done h3{color:var(--good)}
+  .done p{margin:2px 0 0;font-size:14px;color:var(--ink-soft)}
+
+  /* results */
+  .summary{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px}
+  .summary .card{margin-top:0}
+  .stat .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-mute)}
+  .stat .v{font-family:var(--serif);font-size:40px;line-height:1;margin-top:12px}
+  .stat .v small{font-family:var(--sans);font-size:14px;color:var(--ink-mute)}
+  .stat.badstat .v{color:var(--bad)}
+  .rt td{font-variant-numeric:tabular-nums}
+  .rt td.r,.rt th.r{text-align:right}
+  .rt td.c,.rt th.c{text-align:center;width:52px}
+  .rt tr.over td{background:var(--bad-soft)}
+  .rt tr.over td:first-child{box-shadow:inset 3px 0 0 var(--bad)}
+  .rt tr.over .delta{color:var(--bad);font-weight:500}
+  .rt .model{color:var(--navy);font-weight:400}
+  .flag{border:0;background:transparent;padding:4px;cursor:pointer;border-radius:4px;line-height:0}
+  .flag svg path{fill:none;stroke:#c9c9c9;stroke-width:1.4;transition:.15s}
+  .flag[aria-pressed="true"] svg path.cloth{fill:var(--bad);stroke:var(--bad)}
+  .flag[aria-pressed="true"] svg path.pole{stroke:var(--bad)}
+  .flag:hover svg path{stroke:var(--bad)}
+  .state{padding:34px 0;text-align:center;font-family:var(--mono);font-size:12px;color:var(--ink-mute);letter-spacing:.04em}
+  .state.errs{color:var(--bad)}
+  .state .btn{margin-top:14px}
+  .legend{display:flex;gap:18px;flex-wrap:wrap;font-family:var(--mono);font-size:11px;color:var(--ink-mute);margin-top:14px}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .sw{width:10px;height:10px;border-radius:2px;background:var(--bad-soft);border:1px solid var(--bad)}
+  .ok-msg{font-size:14px;color:var(--good)}
+
+  @media(max-width:980px){
+    .s1{grid-template-columns:1fr}
+    .side{position:static;order:-1}
+    svg.fig{max-height:52vh}
+    .g4{grid-template-columns:1fr 1fr}
+    .shapes{grid-template-columns:repeat(3,1fr)}
+  }
+  @media(max-width:620px){
+    .g3,.g4,.summary{grid-template-columns:1fr}
+    .mt .nm small{display:none}
+    .mt td.in{width:72px}
+  }
+  @media(prefers-reduced-motion:reduce){ *{transition:none !important} }
 </style>
 </head>
 <body>
 <div class="wrap">
   <header class="top">
-    <div class="eyebrow">Ask Ella</div>
-    <h1>ML validation <em>study</em></h1>
+    <div>
+      <div class="eyebrow">Ask Ella · Research</div>
+      <h1>ML validation <em>study</em></h1>
+    </div>
+    <div class="meta">
+      <div>Model 1 · manual measurement benchmark</div>
+      <div>Subject <b id="subjBadge">—</b></div>
+    </div>
   </header>
+
+  <!-- ═══════════════ STEP 1 ═══════════════ -->
+  <section class="step" id="step1">
+    <div class="step-head"><span class="n">01</span><h2>Measure the participant</h2><span class="sub">participant present</span></div>
+
+    <div class="card protocol">
+      <div class="eyebrow">Standard procedure</div>
+      <ul>
+        <li><b>Take every measurement twice.</b> Re-position the tape between readings, don't just re-read it. If the two readings differ by more than 1 cm, take both again.</li>
+        <li>Participant stands upright, feet together, arms relaxed at the sides, in close-fitting clothing and no shoes.</li>
+        <li>Measure on the participant's <b>right side</b>. Read girths at the end of a normal breath out, with the tape level and snug but not compressing.</li>
+        <li>Record in <b>centimetres</b> to one decimal place (kg for weight). Click any row to see exactly where to measure.</li>
+      </ul>
+    </div>
+
+    <div class="s1" style="margin-top:16px">
+      <div>
+        <fieldset id="s1fields" style="border:0;padding:0;margin:0;min-width:0">
+
+        <div class="card">
+          <h3>Session</h3>
+          <p class="hint">The subject number is generated for you. Note it on the paper consent form.</p>
+          <div class="grid g3">
+            <label class="f">Researcher name<input id="researcher" autocomplete="name" required></label>
+            <label class="f">Date<input id="date" type="date" required></label>
+            <label class="f">Subject #<input id="subject" readonly tabindex="-1"></label>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Participant</h3>
+          <p class="hint">Height and weight are also taken twice.</p>
+          <div style="display:flex;gap:28px;flex-wrap:wrap;align-items:flex-end">
+            <div>
+              <div class="eyebrow" style="margin-bottom:8px">Sex</div>
+              <div class="seg" id="sexSeg">
+                <label><input type="radio" name="sex" value="female" checked>Female</label>
+                <label><input type="radio" name="sex" value="male">Male</label>
+              </div>
+            </div>
+            <label class="f" style="width:110px">Age (years)<input id="age" type="number" inputmode="numeric" min="16" max="100" step="1"></label>
+          </div>
+
+          <table class="mt" style="margin-top:20px">
+            <thead><tr><th></th><th>Measurement</th><th class="r">Reading 1</th><th class="r">Reading 2</th><th style="text-align:right">Mean</th></tr></thead>
+            <tbody id="baseRows"></tbody>
+          </table>
+
+          <div id="shapeBlock" style="margin-top:22px">
+            <div class="eyebrow" style="margin-bottom:4px">Body shape</div>
+            <p class="hint" style="margin-bottom:12px">Ask the participant to choose the shape closest to theirs, as they would in the Ask Ella widget. Don't choose for them.</p>
+            <div class="shapes" id="shapes"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Body measurements</h3>
+          <p class="hint">Centimetres. Two readings per measurement. Rows marked <span class="pill back" style="font-size:9px;padding:2px 7px">back</span> are taken from behind.</p>
+          <table class="mt">
+            <thead><tr><th></th><th>Measurement</th><th class="r">Reading 1</th><th class="r">Reading 2</th><th style="text-align:right">Mean</th></tr></thead>
+            <tbody id="measRows"></tbody>
+          </table>
+        </div>
+
+        </fieldset>
+
+        <div class="actions" id="s1actions">
+          <span class="msg" id="s1msg"></span>
+          <button class="btn" id="nextBtn" type="button">Next →</button>
+        </div>
+      </div>
+
+      <aside class="side">
+        <div class="card mq">
+          <div class="mq-top">
+            <span class="eyebrow" id="mqSex">Female</span>
+            <span class="pill" id="mqView">Front</span>
+          </div>
+          <svg class="fig dim" id="fig" viewBox="0 0 280 560" role="img" aria-label="Mannequin showing where to take the selected measurement">
+            <line class="floor" x1="0" y1="548.5" x2="280" y2="548.5"/>
+            <ellipse class="body" cx="140" cy="49" rx="21" ry="27"/>
+            <path class="body" id="bodyPath" d=""/>
+            <g id="lines"></g>
+          </svg>
+          <div class="how" id="how"></div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ═══════════════ HANDOFF + STEP 2 ═══════════════ -->
+  <section class="step hide" id="step2">
+    <div class="card done">
+      <div class="tick-ic"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M3 8.5l3.2 3L13 4.5" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div>
+        <h3>Participant involvement is complete</h3>
+        <p>Thank the participant. They're free to go. Everything below is for the research team only and doesn't need them present.</p>
+      </div>
+    </div>
+
+    <div class="step-head" style="margin-top:38px"><span class="n">02</span><h2>Model 1 outputs</h2><span class="sub">read only</span></div>
+
+    <div id="results"></div>
+
+    <div class="card" style="margin-top:16px">
+      <h3>Notes</h3>
+      <p class="hint">Anything that could explain a difference: posture, clothing, a reading you weren't sure of, equipment.</p>
+      <textarea id="notes" rows="5" placeholder="e.g. Participant wore jeans; thigh taken over denim."></textarea>
+      <div class="actions">
+        <span class="msg" id="s2msg"></span>
+        <button class="btn" id="submitBtn" type="button">Submit</button>
+      </div>
+    </div>
+
+    <div class="card hide" id="afterSubmit" style="margin-top:16px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap">
+      <span class="ok-msg" id="okMsg">Submitted.</span>
+      <button class="btn ghost" id="againBtn" type="button">Start next subject</button>
+    </div>
+  </section>
 </div>
+
+<iframe name="gf_sink" id="gfSink" style="display:none" title="submission"></iframe>
+
+<script>
+/* ════════════════════════════════════════════════════════════════════════
+   CONFIG — the two things to wire up.
+   MODEL1_URL   POST endpoint returning the Model 1 vector (contract below).
+   FORM_ACTION / ENTRIES   paste the output of build_validation_form.gs here.
+   Test without either: add ?mock=1 to the URL (fake predictions, no submit).
+   ════════════════════════════════════════════════════════════════════════
+
+   Model 1 contract
+   POST MODEL1_URL   Content-Type: application/json
+     { "sex": "female"|"male", "age": 34, "height_cm": 168.2, "weight_kg": 64.5,
+       "shape": "pear" }          // shape: women only — pear|hourglass|rectangle|inverted_triangle|apple
+   → 200 { "measurements": { "bust_cm": 91.2, "waist_cm": 74.0, ... } }
+     (a flat { "bust_cm": ... } object is also accepted)
+   Women's keys: model1_women.py TARGETS · Men's keys: model1_men.py TARGETS
+*/
+const CONFIG = {
+  MODEL1_URL: "",
+  FORM_ACTION: "",
+  ENTRIES: {},
+  TOLERANCE_CM: 3,      // model vs researcher: flag above this
+  REPEAT_CM: 1,         // reading 1 vs reading 2: warn above this
+};
+
+const MOCK = new URLSearchParams(location.search).has("mock");
+const $ = (s, el = document) => el.querySelector(s);
+const esc = (v) => String(v == null ? "" : v).replace(/[&<>"']/g, (c) => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+
+const BODY = {"female": "M152.0,76.0 C156.2,78.7 150.0,87.8 153.0,92.0 C156.0,96.2 163.8,98.0 170.0,101.0 C176.2,104.0 185.3,104.3 190.0,110.0 C194.7,115.7 196.0,125.0 198.0,135.0 C200.0,145.0 200.7,157.5 202.0,170.0 C203.3,182.5 204.7,196.7 206.0,210.0 C207.3,223.3 208.7,237.5 210.0,250.0 C211.3,262.5 213.0,276.7 214.0,285.0 C215.0,293.3 216.3,294.5 216.0,300.0 C215.7,305.5 214.3,315.0 212.0,318.0 C209.7,321.0 204.3,321.0 202.0,318.0 C199.7,315.0 198.7,306.3 198.0,300.0 C197.3,293.7 198.7,288.3 198.0,280.0 C197.3,271.7 195.3,260.8 194.0,250.0 C192.7,239.2 191.5,226.7 190.0,215.0 C188.5,203.3 186.7,190.8 185.0,180.0 C183.3,169.2 181.3,156.5 180.0,150.0 C178.7,143.5 177.0,139.7 177.0,141.0 C177.0,142.3 180.3,152.0 180.0,158.0 C179.7,164.0 176.7,168.7 175.0,177.0 C173.3,185.3 169.5,197.5 170.0,208.0 C170.5,218.5 175.3,230.0 178.0,240.0 C180.7,250.0 185.0,258.7 186.0,268.0 C187.0,277.3 185.0,284.0 184.0,296.0 C183.0,308.0 181.7,324.3 180.0,340.0 C178.3,355.7 175.7,378.3 174.0,390.0 C172.3,401.7 170.7,401.7 170.0,410.0 C169.3,418.3 170.7,425.0 170.0,440.0 C169.3,455.0 167.7,484.7 166.0,500.0 C164.3,515.3 160.0,524.3 160.0,532.0 C160.0,539.7 168.0,543.3 166.0,546.0 C164.0,548.7 151.3,550.7 148.0,548.0 C144.7,545.3 146.0,539.7 146.0,530.0 C146.0,520.3 147.7,505.0 148.0,490.0 C148.3,475.0 147.7,453.3 148.0,440.0 C148.3,426.7 150.0,421.7 150.0,410.0 C150.0,398.3 148.7,385.0 148.0,370.0 C147.3,355.0 147.3,331.8 146.0,320.0 C144.7,308.2 142.0,299.0 140.0,299.0 C138.0,299.0 135.3,308.2 134.0,320.0 C132.7,331.8 132.7,355.0 132.0,370.0 C131.3,385.0 130.0,398.3 130.0,410.0 C130.0,421.7 131.7,426.7 132.0,440.0 C132.3,453.3 131.7,475.0 132.0,490.0 C132.3,505.0 134.0,520.3 134.0,530.0 C134.0,539.7 135.3,545.3 132.0,548.0 C128.7,550.7 116.0,548.7 114.0,546.0 C112.0,543.3 120.0,539.7 120.0,532.0 C120.0,524.3 115.7,515.3 114.0,500.0 C112.3,484.7 110.7,455.0 110.0,440.0 C109.3,425.0 110.7,418.3 110.0,410.0 C109.3,401.7 107.7,401.7 106.0,390.0 C104.3,378.3 101.7,355.7 100.0,340.0 C98.3,324.3 97.0,308.0 96.0,296.0 C95.0,284.0 93.0,277.3 94.0,268.0 C95.0,258.7 99.3,250.0 102.0,240.0 C104.7,230.0 109.5,218.5 110.0,208.0 C110.5,197.5 106.7,185.3 105.0,177.0 C103.3,168.7 100.3,164.0 100.0,158.0 C99.7,152.0 103.0,142.3 103.0,141.0 C103.0,139.7 101.3,143.5 100.0,150.0 C98.7,156.5 96.7,169.2 95.0,180.0 C93.3,190.8 91.5,203.3 90.0,215.0 C88.5,226.7 87.3,239.2 86.0,250.0 C84.7,260.8 82.7,271.7 82.0,280.0 C81.3,288.3 82.7,293.7 82.0,300.0 C81.3,306.3 80.3,315.0 78.0,318.0 C75.7,321.0 70.3,321.0 68.0,318.0 C65.7,315.0 64.3,305.5 64.0,300.0 C63.7,294.5 65.0,293.3 66.0,285.0 C67.0,276.7 68.7,262.5 70.0,250.0 C71.3,237.5 72.7,223.3 74.0,210.0 C75.3,196.7 76.7,182.5 78.0,170.0 C79.3,157.5 80.0,145.0 82.0,135.0 C84.0,125.0 85.3,115.7 90.0,110.0 C94.7,104.3 103.8,104.0 110.0,101.0 C116.2,98.0 124.0,96.2 127.0,92.0 C130.0,87.8 123.8,78.7 128.0,76.0 C132.2,73.3 147.8,73.3 152.0,76.0Z", "male": "M155.0,78.0 C160.2,80.7 152.5,90.0 156.0,94.0 C159.5,98.0 168.7,99.0 176.0,102.0 C183.3,105.0 194.8,106.5 200.0,112.0 C205.2,117.5 205.2,125.3 207.0,135.0 C208.8,144.7 209.8,157.5 211.0,170.0 C212.2,182.5 213.0,196.7 214.0,210.0 C215.0,223.3 216.0,237.5 217.0,250.0 C218.0,262.5 219.2,276.7 220.0,285.0 C220.8,293.3 222.3,294.2 222.0,300.0 C221.7,305.8 220.5,316.7 218.0,320.0 C215.5,323.3 209.5,323.3 207.0,320.0 C204.5,316.7 203.7,306.3 203.0,300.0 C202.3,293.7 203.7,290.3 203.0,282.0 C202.3,273.7 200.3,261.2 199.0,250.0 C197.7,238.8 196.3,226.7 195.0,215.0 C193.7,203.3 192.3,190.5 191.0,180.0 C189.7,169.5 188.2,157.8 187.0,152.0 C185.8,146.2 184.5,143.3 184.0,145.0 C183.5,146.7 184.7,155.2 184.0,162.0 C183.3,168.8 181.2,177.7 180.0,186.0 C178.8,194.3 177.3,203.0 177.0,212.0 C176.7,221.0 177.2,230.7 178.0,240.0 C178.8,249.3 181.2,258.3 182.0,268.0 C182.8,277.7 183.0,286.0 183.0,298.0 C183.0,310.0 183.2,324.7 182.0,340.0 C180.8,355.3 177.7,378.3 176.0,390.0 C174.3,401.7 172.8,401.7 172.0,410.0 C171.2,418.3 171.8,425.0 171.0,440.0 C170.2,455.0 168.7,484.7 167.0,500.0 C165.3,515.3 160.8,524.3 161.0,532.0 C161.2,539.7 170.2,543.3 168.0,546.0 C165.8,548.7 151.7,550.7 148.0,548.0 C144.3,545.3 146.0,539.7 146.0,530.0 C146.0,520.3 147.5,505.0 148.0,490.0 C148.5,475.0 148.7,453.3 149.0,440.0 C149.3,426.7 150.2,421.7 150.0,410.0 C149.8,398.3 148.7,385.0 148.0,370.0 C147.3,355.0 147.3,331.5 146.0,320.0 C144.7,308.5 142.0,301.0 140.0,301.0 C138.0,301.0 135.3,308.5 134.0,320.0 C132.7,331.5 132.7,355.0 132.0,370.0 C131.3,385.0 130.2,398.3 130.0,410.0 C129.8,421.7 130.7,426.7 131.0,440.0 C131.3,453.3 131.5,475.0 132.0,490.0 C132.5,505.0 134.0,520.3 134.0,530.0 C134.0,539.7 135.7,545.3 132.0,548.0 C128.3,550.7 114.2,548.7 112.0,546.0 C109.8,543.3 118.8,539.7 119.0,532.0 C119.2,524.3 114.7,515.3 113.0,500.0 C111.3,484.7 109.8,455.0 109.0,440.0 C108.2,425.0 108.8,418.3 108.0,410.0 C107.2,401.7 105.7,401.7 104.0,390.0 C102.3,378.3 99.2,355.3 98.0,340.0 C96.8,324.7 97.0,310.0 97.0,298.0 C97.0,286.0 97.2,277.7 98.0,268.0 C98.8,258.3 101.2,249.3 102.0,240.0 C102.8,230.7 103.3,221.0 103.0,212.0 C102.7,203.0 101.2,194.3 100.0,186.0 C98.8,177.7 96.7,168.8 96.0,162.0 C95.3,155.2 96.5,146.7 96.0,145.0 C95.5,143.3 94.2,146.2 93.0,152.0 C91.8,157.8 90.3,169.5 89.0,180.0 C87.7,190.5 86.3,203.3 85.0,215.0 C83.7,226.7 82.3,238.8 81.0,250.0 C79.7,261.2 77.7,273.7 77.0,282.0 C76.3,290.3 77.7,293.7 77.0,300.0 C76.3,306.3 75.5,316.7 73.0,320.0 C70.5,323.3 64.5,323.3 62.0,320.0 C59.5,316.7 58.3,305.8 58.0,300.0 C57.7,294.2 59.2,293.3 60.0,285.0 C60.8,276.7 62.0,262.5 63.0,250.0 C64.0,237.5 65.0,223.3 66.0,210.0 C67.0,196.7 67.8,182.5 69.0,170.0 C70.2,157.5 71.2,144.7 73.0,135.0 C74.8,125.3 74.8,117.5 80.0,112.0 C85.2,106.5 96.7,105.0 104.0,102.0 C111.3,99.0 120.5,98.0 124.0,94.0 C127.5,90.0 119.8,80.7 125.0,78.0 C130.2,75.3 149.8,75.3 155.0,78.0Z"};
+
+/* ── Measurements ──────────────────────────────────────────────────────────
+   Keys and definitions follow model1_women.py / model1_men.py.
+   d = drawing on the mannequin (viewBox 280×560, centre x 140, floor y 548):
+     h: horizontal girth/width  v: vertical height from floor (with tick to body)
+     p: free path               e: ellipse (loop girth)
+   at = label anchor. */
+const L = { stature: 6, shoulder: 16, waist: 26, hip: 36, knee: 46 };
+const vlane = (lane, y, toX) => ({ t: "v", x: lane, y1: 548, y2: y, tick: toX });
+
+const BASE = {
+  height_cm: { n: "Height", def: "Stature: top of head to floor, standing upright.",
+    how: "Stadiometer, no shoes. Heels, buttocks and shoulder blades against the board, heels together. Head level (eyes and top of ear in line). Lower the headpiece onto the crown and read.",
+    unit: "cm", view: "front", d: [vlane(L.stature, 21, 128)], at: [10, 14] },
+  weight_kg: { n: "Weight", def: "Body mass.",
+    how: "Calibrated scale on a hard floor. Light clothing, no shoes, pockets empty. Participant stands still in the centre of the plate.",
+    unit: "kg", view: "front", d: [], at: [0, 0] },
+};
+
+const SHARED = {
+  waist_cm: { n: "Waist", def: "Natural waist: horizontal girth between the lowest rib and the top of the hip bone.",
+    how: "Ask the participant to bend to one side: the crease marks the natural waist. Tape level all the way round. Read at the end of a normal breath out. Don't let them pull in." },
+  hip_cm: { n: "Hip", def: "Maximum horizontal girth at the fullest part of the buttocks.",
+    how: "Feet together. Check the level from the side, find the fullest point of the seat and keep the tape horizontal. Mark this level for hip height." },
+  thigh_cm: { n: "Thigh", def: "Horizontal girth at the highest point of the thigh.",
+    how: "Feet about 10 cm apart, weight even. Tape just below the buttock crease, as high into the crotch as it will go, kept horizontal." },
+  shoulder_width_cm: { n: "Shoulder width", def: "Acromion to acromion, over the back surface. Equals a garment's seam-to-seam.",
+    how: "Feel for the bony tip at the outer edge of each shoulder (the acromion). Measure tip to tip across the back, following the curve of the body.", view: "back" },
+  back_width_cm: { n: "Back width", def: "Across the back, armpit fold to armpit fold, at mid-armhole level.",
+    how: "Arms relaxed. Halfway between the top of the shoulder and the armpit, measure straight across the back between the two creases where the arms meet the body.", view: "back" },
+  shoulder_height_cm: { n: "Shoulder height", def: "Vertical distance, floor to the acromion (shoulder point).",
+    how: "Anthropometer or wall tape. Floor to the bony tip of the right shoulder, kept vertical." },
+  waist_height_cm: { n: "Waist height", def: "Vertical distance, floor to the natural waist.",
+    how: "Floor to the natural-waist level you found for the waist girth, at the side of the body. Keep the tape vertical, not following the hip." },
+  hip_height_cm: { n: "Hip height", def: "Vertical distance, floor to the fullest-hip level.",
+    how: "Floor to the level you marked for the hip girth, at the side. Vertical." },
+  knee_height_cm: { n: "Knee height", def: "Vertical distance, floor to mid-knee.",
+    how: "Floor to the middle of the kneecap, standing, legs straight. Vertical." },
+  inseam_cm: { n: "Inseam", def: "Vertical distance, floor to crotch (inside leg).",
+    how: "Participant holds a flat ruler or hardback book level, pressed gently up into the crotch. Measure floor to its top edge." },
+  back_length_cm: { n: "Back length", def: "Nape (C7) to natural waist, along the spine.",
+    how: "Ask the participant to tip the head forward: C7 is the most prominent bone at the base of the neck. Measure down the spine, following its curve, to the natural-waist level.", view: "back" },
+};
+
+const SEXES = {
+  female: [
+    ["bust_cm", { n: "Bust", def: "Maximum horizontal girth under the armpits, at the fullest point of the bust.",
+      how: "Arms relaxed. Tape across the fullest point of the bust and level across the shoulder blades at the back. Normal breathing." }, { t: "h", y: 158, x1: 100, x2: 180 }],
+    ["underbust_cm", { n: "Underbust", def: "Horizontal girth immediately below the breasts.",
+      how: "Tape directly under the breasts, along the fold, level all the way round. Read on a normal breath out." }, { t: "h", y: 177, x1: 105, x2: 175 }],
+    ["waist_cm", SHARED.waist_cm, { t: "h", y: 208, x1: 110, x2: 170 }],
+    ["hip_cm", SHARED.hip_cm, { t: "h", y: 268, x1: 94, x2: 186 }],
+    ["upper_arm_cm", { n: "Upper arm", def: "Maximum girth of the upper arm at armpit level.",
+      how: "Arm hanging relaxed. Tape round the arm at the level of the lowest point of the armpit, perpendicular to the arm." }, { t: "h", y: 150, x1: 179, x2: 202 }],
+    ["thigh_cm", SHARED.thigh_cm, { t: "h", y: 306, x1: 146, x2: 183 }],
+    ["shoulder_width_cm", SHARED.shoulder_width_cm, { t: "p", d: "M90,110 Q140,95 190,110", dash: 1 }],
+    ["back_width_cm", SHARED.back_width_cm, { t: "h", y: 132, x1: 102, x2: 178, dash: 1 }],
+    ["shoulder_height_cm", SHARED.shoulder_height_cm, vlane(L.shoulder, 110, 90)],
+    ["waist_height_cm", SHARED.waist_height_cm, vlane(L.waist, 208, 110)],
+    ["hip_height_cm", SHARED.hip_height_cm, vlane(L.hip, 268, 94)],
+    ["knee_height_cm", SHARED.knee_height_cm, vlane(L.knee, 410, 110)],
+    ["inseam_cm", SHARED.inseam_cm, { t: "v", x: 140, y1: 548, y2: 300 }],
+    ["back_length_cm", SHARED.back_length_cm, { t: "v", x: 140, y1: 92, y2: 208, dash: 1 }],
+    ["sleeve_length_cm", { n: "Sleeve length", def: "Shoulder point (acromion) to wrist bone, over the elbow.",
+      how: "Arm hanging, elbow very slightly bent. From the bony tip of the shoulder, down the outside of the arm over the elbow to the prominent wrist bone." },
+      { t: "p", d: "M193,109 L201,135 L205,170 L209,210 L213,250 L216,292" }],
+  ],
+  male: [
+    ["chest_cm", { n: "Chest", def: "Maximum horizontal girth at nipple level.",
+      how: "Arms relaxed. Tape across the nipples and level across the shoulder blades at the back. Normal breathing." }, { t: "h", y: 162, x1: 96, x2: 184 }],
+    ["waist_cm", SHARED.waist_cm, { t: "h", y: 212, x1: 103, x2: 177 }],
+    ["hip_cm", Object.assign({}, SHARED.hip_cm, { def: "Maximum horizontal girth at the fullest part of the seat." }), { t: "h", y: 268, x1: 98, x2: 182 }],
+    ["neck_cm", { n: "Neck", def: "Girth at the base of the neck, where a shirt collar sits.",
+      how: "Tape round the base of the neck, passing over C7 at the back and just above the collarbones at the front. One finger's room, no more." }, { t: "e", cx: 140, cy: 90, rx: 17, ry: 4 }],
+    ["upper_arm_cm", { n: "Armhole", def: "Armscye: closed loop from the shoulder tip, under the armpit and back up. Not the bicep.",
+      how: "Arm relaxed. Start at the acromion (shoulder tip), take the tape down through the armpit and back up to the start point. Read where the tape meets." }, { t: "e", cx: 194, cy: 131, rx: 10, ry: 20 }],
+    ["thigh_cm", SHARED.thigh_cm, { t: "h", y: 306, x1: 146, x2: 183 }],
+    ["shoulder_width_cm", SHARED.shoulder_width_cm, { t: "p", d: "M80,112 Q140,97 200,112", dash: 1 }],
+    ["back_width_cm", SHARED.back_width_cm, { t: "h", y: 134, x1: 94, x2: 186, dash: 1 }],
+    ["shoulder_height_cm", SHARED.shoulder_height_cm, vlane(L.shoulder, 112, 80)],
+    ["waist_height_cm", SHARED.waist_height_cm, vlane(L.waist, 212, 103)],
+    ["hip_height_cm", SHARED.hip_height_cm, vlane(L.hip, 268, 98)],
+    ["knee_height_cm", SHARED.knee_height_cm, vlane(L.knee, 410, 108)],
+    ["inseam_cm", SHARED.inseam_cm, { t: "v", x: 140, y1: 548, y2: 302 }],
+    ["back_length_cm", SHARED.back_length_cm, { t: "v", x: 140, y1: 94, y2: 212, dash: 1 }],
+    ["sleeve_length_cb_cm", { n: "Sleeve length (CB)", def: "Nape (C7) over the shoulder point and elbow to the wrist bone. Men's convention.",
+      how: "Arm hanging, elbow very slightly bent. Start at C7, run across the top of the shoulder to its bony tip, then down the outside of the arm over the elbow to the wrist bone.", view: "back" },
+      { t: "p", d: "M140,92 Q172,96 201,111 L209,135 L213,170 L216,210 L219,250 L222,292" }],
+  ],
+};
+
+const SHAPES = [
+  ["hourglass", "Hourglass", "M14 6 L26 6 L22 22 L27 40 L13 40 L18 22 Z"],
+  ["pear", "Pear", "M16 6 L24 6 L23 22 L30 40 L10 40 L17 22 Z"],
+  ["inverted_triangle", "Inverted triangle", "M9 6 L31 6 L24 24 L23 40 L17 40 L16 24 Z"],
+  ["rectangle", "Rectangle", "M13 6 L27 6 L26 23 L27 40 L13 40 L14 23 Z"],
+  ["apple", "Apple", "M15 6 L25 6 Q33 20 25 32 L24 40 L16 40 L15 32 Q7 20 15 6 Z"],
+];
+
+/* ── state ─────────────────────────────────────────────────────────────── */
+let SEX = "female";
+let ACTIVE = "height_cm";
+let LOCKED = false;
+let PRED = null;          // model output
+let FLAGS = {};           // key -> bool
+
+const measList = () => SEXES[SEX].map(([k, info, draw]) => ({
+  k, ...info, view: info.view || "front", draw: [draw],
+}));
+const allDefs = () => {
+  const o = {};
+  Object.entries(BASE).forEach(([k, v]) => (o[k] = { k, ...v, draw: v.d }));
+  measList().forEach((m) => (o[m.k] = m));
+  return o;
+};
+
+/* ── subject id ────────────────────────────────────────────────────────── */
+function newSubjectId() {
+  const d = new Date();
+  const ymd = String(d.getFullYear()).slice(2) + String(d.getMonth() + 1).padStart(2, "0") + String(d.getDate()).padStart(2, "0");
+  const A = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
+  let r = "";
+  const buf = new Uint32Array(4);
+  (window.crypto || {}).getRandomValues ? crypto.getRandomValues(buf) : buf.forEach((_, i) => (buf[i] = Math.random() * 1e9));
+  buf.forEach((n) => (r += A[n % A.length]));
+  return "AE-" + ymd + "-" + r;
+}
+
+/* ── rendering: form rows ──────────────────────────────────────────────── */
+function rowHtml(i, m) {
+  const back = m.view === "back" ? ' <span class="pill back" style="font-size:9px;padding:2px 7px;vertical-align:1px">back</span>' : "";
+  const step = m.unit === "kg" ? "0.1" : "0.1";
+  return `<tr data-k="${m.k}">
+    <td class="idx">${String(i).padStart(2, "0")}</td>
+    <td class="nm">${esc(m.n)}${m.unit === "kg" ? " <span class='mono' style='font-size:11px;color:var(--ink-mute)'>kg</span>" : ""}${back}<small>${esc(m.def)}</small></td>
+    <td class="in"><input type="number" inputmode="decimal" step="${step}" min="0" data-k="${m.k}" data-r="1" aria-label="${esc(m.n)} reading 1"></td>
+    <td class="in"><input type="number" inputmode="decimal" step="${step}" min="0" data-k="${m.k}" data-r="2" aria-label="${esc(m.n)} reading 2"></td>
+    <td class="mean"><span data-mean="${m.k}">—</span><span class="warn hide" data-warn="${m.k}">re-measure</span></td>
+  </tr>`;
+}
+
+function renderForm(keep) {
+  const saved = keep ? collectReadings() : {};
+  $("#baseRows").innerHTML = Object.entries(BASE).map(([k, v], i) => rowHtml("H" + (i + 1), { k, ...v })).join("").replace(/>H(\d)</g, ">H$1<");
+  // nicer labels for base rows
+  $("#baseRows").querySelectorAll(".idx").forEach((td) => (td.textContent = "—"));
+  $("#measRows").innerHTML = measList().map((m, i) => rowHtml(i + 1, m)).join("");
+  // restore values for keys that still exist
+  document.querySelectorAll("input[data-k]").forEach((inp) => {
+    const v = saved[inp.dataset.k];
+    if (v && v[inp.dataset.r - 1] != null) inp.value = v[inp.dataset.r - 1];
+  });
+  document.querySelectorAll("tr[data-k]").forEach(updateMean);
+  $("#shapeBlock").classList.toggle("hide", SEX !== "female");
+  if (!allDefs()[ACTIVE]) ACTIVE = "height_cm";
+  renderFigure();
+}
+
+function readPair(k) {
+  const a = document.querySelector(`input[data-k="${k}"][data-r="1"]`);
+  const b = document.querySelector(`input[data-k="${k}"][data-r="2"]`);
+  const p = (x) => (x && x.value !== "" && isFinite(+x.value) ? +x.value : null);
+  return [p(a), p(b)];
+}
+function collectReadings() {
+  const o = {};
+  document.querySelectorAll("tr[data-k]").forEach((tr) => (o[tr.dataset.k] = readPair(tr.dataset.k)));
+  return o;
+}
+const meanOf = ([a, b]) => (a != null && b != null ? Math.round(((a + b) / 2) * 10) / 10 : null);
+
+function updateMean(tr) {
+  const k = tr.dataset.k;
+  const pair = readPair(k);
+  const m = meanOf(pair);
+  tr.querySelector(`[data-mean="${k}"]`).textContent = m == null ? "—" : m.toFixed(1);
+  const warn = pair[0] != null && pair[1] != null && Math.abs(pair[0] - pair[1]) > CONFIG.REPEAT_CM;
+  tr.querySelector(`[data-warn="${k}"]`).classList.toggle("hide", !warn);
+}
+
+/* ── rendering: mannequin ──────────────────────────────────────────────── */
+function drawShape(d) {
+  const dash = d.dash ? " dash" : "";
+  if (d.t === "h") return `<line class="m${dash}" x1="${d.x1}" y1="${d.y}" x2="${d.x2}" y2="${d.y}"/><circle class="dot" cx="${d.x1}" cy="${d.y}" r="2"/><circle class="dot" cx="${d.x2}" cy="${d.y}" r="2"/>`;
+  if (d.t === "v") {
+    const tick = d.tick != null ? `<line class="tick" x1="${d.x}" y1="${d.y2}" x2="${d.tick}" y2="${d.y2}"/>` : "";
+    return `<line class="m${dash}" x1="${d.x}" y1="${d.y1}" x2="${d.x}" y2="${d.y2}"/>${tick}<circle class="dot" cx="${d.x}" cy="${d.y2}" r="2"/>`;
+  }
+  if (d.t === "p") return `<path class="m${dash}" d="${d.d}"/>`;
+  if (d.t === "e") return `<ellipse class="m${dash}" cx="${d.cx}" cy="${d.cy}" rx="${d.rx}" ry="${d.ry}"/>`;
+  return "";
+}
+function labelPos(d) {
+  if (d.t === "h") return [d.x2 + 8, d.y];
+  if (d.t === "v") return d.x < 100 ? [d.x + 4, d.y2 - 10] : [d.x + 8, (d.y1 + d.y2) / 2];
+  if (d.t === "e") return [d.cx + d.rx + 6, d.cy];
+  if (d.t === "p") { const n = d.d.match(/-?\d+(\.\d+)?/g).map(Number); return [n[n.length - 2] + 6, n[n.length - 1]]; }
+  return [0, 0];
+}
+
+function renderFigure() {
+  $("#bodyPath").setAttribute("d", BODY[SEX]);
+  $("#mqSex").textContent = SEX === "female" ? "Female" : "Male";
+  const defs = allDefs();
+  let html = "";
+  Object.values(defs).forEach((m) => {
+    if (!m.draw || !m.draw.length) return;
+    const d = m.draw[0];
+    let [lx, ly] = labelPos(d);
+    const text = m.n;
+    const w = text.length * 6 + 12;
+    if (lx + w > 278) lx = 278 - w;
+    html += `<g data-k="${m.k}">${m.draw.map(drawShape).join("")}
+      <g class="lbl"><rect x="${lx}" y="${ly - 8}" width="${w}" height="16" rx="8"/><text x="${lx + 6}" y="${ly + 3.5}">${esc(text)}</text></g></g>`;
+  });
+  $("#lines").innerHTML = html;
+  setActive(ACTIVE);
+}
+
+function setActive(k) {
+  const defs = allDefs();
+  if (!defs[k]) return;
+  ACTIVE = k;
+  document.querySelectorAll("#lines > g").forEach((g) => g.classList.toggle("on", g.dataset.k === k));
+  // bring active group to front
+  const g = document.querySelector(`#lines > g[data-k="${k}"]`);
+  if (g) g.parentNode.appendChild(g);
+  document.querySelectorAll("tr[data-k]").forEach((tr) => tr.classList.toggle("active", tr.dataset.k === k));
+  const m = defs[k];
+  const v = $("#mqView");
+  v.textContent = m.view === "back" ? "Back view" : "Front view";
+  v.classList.toggle("back", m.view === "back");
+  $("#how").innerHTML = `<div class="eyebrow">How to measure</div><h4>${esc(m.n)}</h4><p>${esc(m.how)}</p><p class="tip">${esc(m.def)} Take it twice.</p>`;
+}
+
+/* ── shapes ────────────────────────────────────────────────────────────── */
+$("#shapes").innerHTML = SHAPES.map(([v, n, d]) =>
+  `<label><input type="radio" name="shape" value="${v}"><svg width="40" height="44" viewBox="0 0 40 44"><circle cx="20" cy="3.5" r="3" fill="#c4dcea"/><path d="${d}" fill="#ddeef5" stroke="#8ab8cc" stroke-width="1"/></svg>${n}</label>`).join("");
+
+/* ── events: step 1 ────────────────────────────────────────────────────── */
+document.addEventListener("input", (e) => {
+  const t = e.target;
+  if (t.matches("input[data-k]")) { updateMean(t.closest("tr")); t.classList.remove("err"); }
+  if (t.matches("#researcher,#age,#date")) t.classList.remove("err");
+});
+document.addEventListener("focusin", (e) => { const tr = e.target.closest && e.target.closest("tr[data-k]"); if (tr && !LOCKED) setActive(tr.dataset.k); });
+document.addEventListener("click", (e) => { const tr = e.target.closest && e.target.closest(".mt tr[data-k]"); if (tr && !LOCKED) setActive(tr.dataset.k); });
+document.querySelectorAll('input[name="sex"]').forEach((r) => r.addEventListener("change", () => {
+  SEX = document.querySelector('input[name="sex"]:checked').value;
+  renderForm(true);
+}));
+$("#shapes").addEventListener("change", () => $("#shapes").classList.remove("err"));
+
+function validate() {
+  const errs = [];
+  const mark = (el) => { el.classList.add("err"); errs.push(el); };
+  if (!$("#researcher").value.trim()) mark($("#researcher"));
+  if (!$("#date").value) mark($("#date"));
+  const age = +$("#age").value;
+  if (!$("#age").value || age < 16 || age > 100) mark($("#age"));
+  const range = { weight_kg: [30, 250], height_cm: [120, 230] };
+  document.querySelectorAll("input[data-k]").forEach((inp) => {
+    const [lo, hi] = range[inp.dataset.k] || [2, 220];
+    const v = +inp.value;
+    if (inp.value === "" || !isFinite(v) || v < lo || v > hi) mark(inp);
+  });
+  if (SEX === "female" && !document.querySelector('input[name="shape"]:checked')) { $("#shapes").classList.add("err"); errs.push($("#shapes")); }
+  return errs;
+}
+
+$("#nextBtn").addEventListener("click", () => {
+  $("#s1msg").textContent = "";
+  const errs = validate();
+  if (errs.length) {
+    $("#s1msg").textContent = errs.length === 1 ? "One field needs attention." : errs.length + " fields need attention.";
+    errs[0].scrollIntoView({ behavior: "smooth", block: "center" });
+    return;
+  }
+  const repeats = [...document.querySelectorAll("[data-warn]:not(.hide)")].length;
+  if (repeats && $("#nextBtn").dataset.confirmed !== "1") {
+    $("#s1msg").textContent = repeats + (repeats === 1 ? " measurement has" : " measurements have") + " readings more than 1 cm apart. Re-measure, or press Next again to continue.";
+    $("#nextBtn").dataset.confirmed = "1";
+    return;
+  }
+  lockStep1();
+  $("#step2").classList.remove("hide");
+  $("#step2").scrollIntoView({ behavior: "smooth", block: "start" });
+  runModel();
+});
+
+function lockStep1() {
+  LOCKED = true;
+  $("#s1fields").disabled = true;
+  $("#s1actions").classList.add("hide");
+  document.querySelectorAll(".shapes label,.seg label").forEach((l) => (l.style.cursor = "default"));
+}
+
+/* ── model ─────────────────────────────────────────────────────────────── */
+function modelInput() {
+  const r = collectReadings();
+  const o = { sex: SEX, age: +$("#age").value, height_cm: meanOf(r.height_cm), weight_kg: meanOf(r.weight_kg) };
+  if (SEX === "female") o.shape = document.querySelector('input[name="shape"]:checked').value;
+  return o;
+}
+
+async function fetchPredictions(input) {
+  if (MOCK) {
+    await new Promise((r) => setTimeout(r, 600));
+    const r = collectReadings(), out = {};
+    measList().forEach((m, i) => { const base = meanOf(r[m.k]); out[m.k] = Math.round((base + Math.sin(i * 2.3 + input.age) * 3.4) * 10) / 10; });
+    return out;
+  }
+  if (!CONFIG.MODEL1_URL) throw new Error("Model 1 endpoint isn't connected yet.");
+  const res = await fetch(CONFIG.MODEL1_URL, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(input) });
+  if (!res.ok) throw new Error("Model 1 returned " + res.status + ".");
+  const j = await res.json();
+  return j.measurements || j;
+}
+
+async function runModel() {
+  $("#results").innerHTML = `<div class="card"><div class="state">Running Model 1…</div></div>`;
+  try {
+    PRED = await fetchPredictions(modelInput());
+    FLAGS = {};
+    renderResults();
+  } catch (err) {
+    PRED = null;
+    $("#results").innerHTML = `<div class="card"><div class="state errs">${esc(err.message)}<br><span style="color:var(--ink-mute)">The measurements are safe. You can retry, or submit without model output.</span><br><button class="btn ghost" id="retryBtn" type="button">Retry</button></div></div>`;
+    $("#retryBtn").addEventListener("click", runModel);
+  }
+}
+
+const FLAG_SVG = `<svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path class="pole" d="M4 2v14"/><path class="cloth" d="M4 3h9l-2 3 2 3H4"/></svg>`;
+
+function rowsForResults() {
+  const r = collectReadings();
+  return measList().map((m, i) => {
+    const researcher = meanOf(r[m.k]);
+    const model = PRED && PRED[m.k] != null && isFinite(+PRED[m.k]) ? Math.round(+PRED[m.k] * 10) / 10 : null;
+    const delta = model != null && researcher != null ? Math.round((model - researcher) * 10) / 10 : null;
+    return { i: i + 1, m, r: r[m.k], researcher, model, delta, over: delta != null && Math.abs(delta) > CONFIG.TOLERANCE_CM };
+  });
+}
+
+function renderResults() {
+  const rows = rowsForResults();
+  rows.forEach((x) => { if (!(x.m.k in FLAGS)) FLAGS[x.m.k] = x.over; });
+  const withD = rows.filter((x) => x.delta != null);
+  const mad = withD.length ? withD.reduce((s, x) => s + Math.abs(x.delta), 0) / withD.length : null;
+  const over = rows.filter((x) => x.over).length;
+  const fmt = (v) => (v == null ? "—" : v.toFixed(1));
+  const sgn = (v) => (v == null ? "—" : (v > 0 ? "+" : v < 0 ? "−" : "±") + Math.abs(v).toFixed(1));
+
+  $("#results").innerHTML = `
+    <div class="summary">
+      <div class="card stat"><div class="k">Mean absolute difference</div><div class="v num">${mad == null ? "—" : mad.toFixed(2)} <small>cm</small></div></div>
+      <div class="card stat ${over ? "badstat" : ""}"><div class="k">Over ${CONFIG.TOLERANCE_CM} cm</div><div class="v num">${over} <small>of ${rows.length}</small></div></div>
+      <div class="card stat"><div class="k">Model inputs</div><div class="v" style="font-size:18px;font-family:var(--mono);line-height:1.5;margin-top:14px">${esc(modelInputLine())}</div></div>
+    </div>
+    <div class="card">
+      <table class="rt">
+        <thead><tr><th></th><th>Measurement</th><th class="r">Reading 1</th><th class="r">Reading 2</th><th class="r">Researcher</th><th class="r">Model 1</th><th class="r">Difference</th><th class="c">Flag</th></tr></thead>
+        <tbody>${rows.map((x) => `
+          <tr class="${x.over ? "over" : ""}" data-rk="${x.m.k}">
+            <td class="mono" style="font-size:11px;color:var(--blue-deep);width:30px">${String(x.i).padStart(2, "0")}</td>
+            <td>${esc(x.m.n)}</td>
+            <td class="r" style="color:var(--ink-mute)">${fmt(x.r[0])}</td>
+            <td class="r" style="color:var(--ink-mute)">${fmt(x.r[1])}</td>
+            <td class="r">${fmt(x.researcher)}</td>
+            <td class="r model">${fmt(x.model)}</td>
+            <td class="r delta">${sgn(x.delta)}</td>
+            <td class="c"><button class="flag" type="button" data-flag="${x.m.k}" aria-pressed="${FLAGS[x.m.k]}" aria-label="Flag ${esc(x.m.n)}" title="Flag for review">${FLAG_SVG}</button></td>
+          </tr>`).join("")}
+        </tbody>
+      </table>
+      <div class="legend">
+        <span><i class="sw"></i>Difference over ${CONFIG.TOLERANCE_CM} cm, flagged automatically</span>
+        <span>Difference = Model 1 − researcher mean</span>
+        <span>Click a flag to add or remove it</span>
+      </div>
+    </div>`;
+  document.querySelectorAll("[data-flag]").forEach((b) => b.addEventListener("click", () => {
+    const k = b.dataset.flag; FLAGS[k] = !FLAGS[k]; b.setAttribute("aria-pressed", FLAGS[k]);
+  }));
+}
+
+function modelInputLine() {
+  const i = modelInput();
+  return `${i.sex === "female" ? "F" : "M"} · ${i.age}y · ${i.height_cm} cm · ${i.weight_kg} kg${i.shape ? " · " + i.shape.replace("_", " ") : ""}`;
+}
+
+/* ── submit → Google Form ──────────────────────────────────────────────── */
+function buildRecord() {
+  const r = collectReadings();
+  const rows = rowsForResults();
+  const rec = {
+    subject_id: $("#subject").value, researcher: $("#researcher").value.trim(), date: $("#date").value,
+    sex: SEX, age: $("#age").value,
+    height_r1: r.height_cm[0], height_r2: r.height_cm[1], weight_r1: r.weight_kg[0], weight_r2: r.weight_kg[1],
+    body_shape: SEX === "female" ? modelInput().shape : "",
+    flagged: rows.filter((x) => FLAGS[x.m.k]).map((x) => x.m.k).join(", "),
+    over_tolerance: rows.filter((x) => x.over).map((x) => x.m.k).join(", "),
+    mad_cm: (() => { const d = rows.filter((x) => x.delta != null); return d.length ? (d.reduce((s, x) => s + Math.abs(x.delta), 0) / d.length).toFixed(2) : ""; })(),
+    model_status: PRED ? "ok" : "missing",
+    notes: $("#notes").value.trim(),
+  };
+  rows.forEach((x) => {
+    const base = x.m.k.replace(/_cm$/, "");
+    rec[base + "_r1"] = x.r[0]; rec[base + "_r2"] = x.r[1]; rec[base + "_model"] = x.model == null ? "" : x.model;
+  });
+  rec.payload = JSON.stringify({ ...rec, payload: undefined, model_input: modelInput(), model_output: PRED, page_version: 1 });
+  return rec;
+}
+
+$("#submitBtn").addEventListener("click", () => {
+  $("#s2msg").textContent = "";
+  const rec = buildRecord();
+  try { const a = JSON.parse(localStorage.getItem("mlvs_records") || "[]"); a.push(rec); localStorage.setItem("mlvs_records", JSON.stringify(a)); } catch (_) {}
+  if (MOCK) { done("Mock mode: nothing was sent. Record logged to the console."); console.log(rec); return; }
+  if (!CONFIG.FORM_ACTION || !Object.keys(CONFIG.ENTRIES).length) {
+    $("#s2msg").textContent = "The Google Form isn't connected yet, so this wasn't sent. A copy is saved in this browser.";
+    return;
+  }
+  const f = document.createElement("form");
+  f.method = "POST"; f.action = CONFIG.FORM_ACTION; f.target = "gf_sink"; f.style.display = "none";
+  Object.entries(CONFIG.ENTRIES).forEach(([k, id]) => {
+    if (rec[k] == null || rec[k] === "") return;
+    const i = document.createElement("input"); i.type = "hidden"; i.name = id; i.value = String(rec[k]); f.appendChild(i);
+  });
+  document.body.appendChild(f);
+  $("#submitBtn").disabled = true; $("#submitBtn").textContent = "Submitting…";
+  let settled = false;
+  $("#gfSink").onload = () => { if (settled) return; settled = true; done("Submitted. Subject " + rec.subject_id + " is recorded."); };
+  setTimeout(() => { if (!settled) { settled = true; done("Sent. Subject " + rec.subject_id + ". If it doesn't appear in the sheet, a copy is saved in this browser."); } }, 8000);
+  f.submit();
+  f.remove();
+});
+
+function done(msg) {
+  $("#submitBtn").disabled = true; $("#submitBtn").textContent = "Submitted";
+  $("#notes").disabled = true;
+  document.querySelectorAll("[data-flag]").forEach((b) => (b.disabled = true));
+  $("#okMsg").textContent = msg;
+  $("#afterSubmit").classList.remove("hide");
+}
+$("#againBtn").addEventListener("click", () => { location.href = location.pathname + location.search; });
+
+/* ── init ──────────────────────────────────────────────────────────────── */
+(function init() {
+  $("#subject").value = newSubjectId();
+  $("#subjBadge").textContent = $("#subject").value;
+  const d = new Date();
+  $("#date").value = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+  try { const n = localStorage.getItem("mlvs_researcher"); if (n) $("#researcher").value = n; } catch (_) {}
+  $("#researcher").addEventListener("change", () => { try { localStorage.setItem("mlvs_researcher", $("#researcher").value.trim()); } catch (_) {} });
+  renderForm(false);
+})();
+</script>
 </body>
 </html>
