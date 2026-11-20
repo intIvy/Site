@@ -71,7 +71,15 @@
     font-family:inherit;font-size:13px;color:var(--ink-mute);padding:8px 12px 10px;cursor:pointer}
   .tab .mono{font-family:var(--mono);font-size:11px;opacity:.75;margin-left:4px}
   .tab.on{color:var(--ink);border-bottom-color:var(--ink);font-weight:500}
-  .shop{display:block;width:100%;text-align:left;background:transparent;border:0;border-bottom:1px solid var(--rule);padding:15px 22px;cursor:pointer;font-family:inherit}
+  /* The row became a grid when the thumbnail went in: the thumb holds its
+     column and the text takes the rest, so a long domain cannot squash it. */
+  .shop{display:grid;grid-template-columns:auto 1fr;column-gap:12px;width:100%;text-align:left;background:transparent;border:0;border-bottom:1px solid var(--rule);padding:15px 22px;cursor:pointer;font-family:inherit}
+  .shop .thumb{grid-row:1 / span 2;align-self:center;width:58px;height:40px;border:1px solid rgba(0,0,0,.14);border-radius:5px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .shop .thumb-t{display:inline-flex;align-items:center;gap:3px;padding:3px 6px;font-size:0;line-height:1}
+  .shop .thumb-t svg{width:8px;height:8px;display:block}
+  /* The label, as a bar rather than text: at this size real words are noise
+     and the shape is what reads. */
+  .shop .thumb-t i{display:block;width:17px;height:3px;border-radius:2px;background:currentColor;opacity:.85}
   .shop:last-child{border-bottom:0}
   .shop:hover{background:var(--off)}
   .shop[aria-current=true]{background:var(--blue-pale)}
@@ -158,6 +166,52 @@ try {
   PW = sessionStorage.getItem("ella_review_pw") || "";
 } catch (e) { /* fine */ }
 
+/* The widget's own palette resolver, loaded from the service so the thumbnails
+   below cannot drift from what a shopper sees. If it fails to load the
+   thumbnails fall back to the raw colours, which is wrong only for a preset
+   whose panel needed lightening, and never leaves the queue unusable. */
+let resolvePalette = null;
+const PALETTE_READY = import(API + "/review/theme.js")
+  .then((m) => { resolvePalette = m.resolvePalette; })
+  .catch(() => { /* thumbnails degrade, the queue still works */ });
+
+function paletteFor(theme) {
+  const t = theme || {};
+  if (resolvePalette) {
+    return resolvePalette({
+      mode: t.mode, surface: t.surface, accent: t.accent, ink: t.ink,
+      surfaceChosen: t.mode === "custom" || t.surface_chosen === true,
+    });
+  }
+  return { surface: t.surface || "#FFFFFF", accent: t.accent || "#EDEDED",
+           ink: t.ink || "#1A1A1A", inherit: (t.mode || "inherit") === "inherit" };
+}
+
+/* A shop's widget at a glance: the panel colour, the trigger on it, and
+   whether they kept the ruler. Small on purpose. It answers "what am I about
+   to approve" without opening anything. */
+function thumb(s) {
+  const t = (s.theme && Object.keys(s.theme).length) ? s.theme : null;
+  const p = paletteFor(t);
+  const radius = t && t.trigger_corners === "square" ? 1
+               : t && t.trigger_corners === "pill" ? 99 : 3;
+  const style = (t && t.trigger_style) || "filled";
+  const ruler = !t || t.show_ruler !== "no";
+  return `
+    <span class="thumb" title="${t ? esc((t.mode || "inherit")) + " colours" : "not set up yet"}"
+          style="background:${esc(p.surface)};border-color:${esc(p.line || "rgba(0,0,0,.14)")}">
+      <span class="thumb-t" style="
+        border-radius:${radius}px;
+        background:${style === "filled" ? esc(p.accent) : "transparent"};
+        border:${style === "outlined" ? "1px solid " + esc(p.accentBorder || p.accent) : "1px solid transparent"};
+        color:${esc(p.onAccent || p.ink)};
+        text-decoration:${style === "link" ? "underline" : "none"}">
+        ${ruler ? '<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="1.2" y="4.6" width="13.6" height="6.8" rx="1.2" stroke="currentColor" stroke-width="1.6"/><path d="M4.6 4.6v2.3M8 4.6v3.3M11.4 4.6v2.3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>' : ""}
+        <i></i>
+      </span>
+    </span>`;
+}
+
 const $ = (s, el = document) => el.querySelector(s);
 const esc = (v) => String(v == null ? "" : v).replace(/[&<>"']/g,
   (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -209,6 +263,9 @@ async function loadShops() {
   const out = await call("/review/shops");
   SHOPS = out.shops || [];
   renderList();
+  // The resolver is fetched in parallel with the first queue load, so the
+  // thumbnails are redrawn once it arrives rather than waiting on it.
+  PALETTE_READY.then(() => { if (resolvePalette) renderList(); });
   const pending = SHOPS.filter((s) => s.review_state === "pending").length;
   const flags = SHOPS.reduce((n, s) => n + (s.open_flags || 0), 0);
   $("#counts").innerHTML =
@@ -250,6 +307,7 @@ function renderList() {
   $("#list").innerHTML = rows.length ? rows.map((s) => `
     <button class="shop" data-domain="${esc(s.shop_domain)}"
             aria-current="${CURRENT === s.shop_domain}">
+      ${thumb(s)}
       <div class="d">${esc(s.shop_name || s.shop_domain)}</div>
       <div class="s">
         <span class="pill ${esc(s.review_state)}">${esc(s.review_state.replace("_", " "))}</span>
