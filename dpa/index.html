@@ -550,7 +550,7 @@
                 <tr><td>Random identifier</td><td>Generated in the Shopper&rsquo;s browser. Not derived from any Shopify customer record.</td></tr>
                 <tr><td>Device identifiers</td><td>A session identifier and up to seven keys in the Shopper&rsquo;s browser local storage. A session cookie lasts 12 months; local storage lasts until the Shopper clears it or deletes her Twin.</td></tr>
                 <tr><td>Interaction events</td><td>Widget opened, survey started and completed, recommendation shown, no recommendation available, size sold out, add to cart. Nothing is recorded before the Shopper opens Ask Ella. With a product identifier and the recommended size.</td></tr>
-                <tr><td>Fit outcomes</td><td>Order identifier, line item identifier, product identifier, size purchased, whether the item was returned and the stated reason. Where Ask Ella advised on that line, also the size recommended and whether it was followed. <b>Recorded for every order line in the Merchant&rsquo;s store</b>, not only the advised ones: a return rate is meaningless without the Merchant&rsquo;s own baseline to compare it against, and that baseline can only come from orders Ask Ella was not involved in. A line Ask Ella did not advise on carries no session identifier, no link to a Twin and nothing derived from a Shopper&rsquo;s body.</td></tr>
+                <tr><td>Fit outcomes</td><td>Order identifier, line item identifier, product identifier, size purchased, quantity, the value of that line in the Merchant&rsquo;s own currency, whether the item was returned and the stated reason. Where Ask Ella advised on that line, also the size recommended and whether it was followed. <b>Recorded for every order line in the Merchant&rsquo;s store</b>, not only the advised ones: a return rate is meaningless without the Merchant&rsquo;s own baseline to compare it against, and that baseline can only come from orders Ask Ella was not involved in. A line Ask Ella did not advise on carries no session identifier, no link to a Twin and nothing derived from a Shopper&rsquo;s body.</td></tr>
                 <tr><td>Technical data</td><td>IP addresses and request metadata in service and hosting logs.</td></tr>
               </tbody>
             </table>
@@ -619,7 +619,7 @@
             <li><b>Shop redaction.</b> We delete the Merchant&rsquo;s store record, which cascades to every Shopper record, interaction event, fit outcome and aggregate held for that store.</li>
           </ul>
           <h3>Protected customer data</h3>
-          <p>Ask Ella operates at <b>Level 1</b> under Shopify&rsquo;s protected customer data requirements. It reads order and line item data and takes none of the fields Shopify designates as Level 2: name, address, phone and email.</p>
+          <p>Ask Ella operates at <b>Level 1</b> under Shopify&rsquo;s protected customer data requirements. It reads order and line item data, including the value of each line, and takes none of the fields Shopify designates as Level 2: name, address, phone and email. Line value is held because Shopify&rsquo;s own analytics cannot separate order value by whether a Shopper used Ask Ella, so the comparison a Merchant sees on their results page cannot be produced from any data the Merchant already has.</p>
           <h3>Uninstall</h3>
           <p>Uninstalling deletes the Admin API access token immediately and suspends the storefront block. Clause 12 governs the rest.</p>
         </section>
