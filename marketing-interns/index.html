@@ -64,6 +64,9 @@
   .note{font-size:15px;color:var(--ink-soft);max-width:72ch;margin:12px 0 0}
   .code{font-family:var(--mono);font-size:12.5px;background:var(--off);padding:1px 6px;border-radius:3px}
   .panel a{color:var(--blue-deep)}
+  .panel a.btn{display:inline-block;margin-top:6px;font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;color:var(--navy);background:#CCE4ED;border:1px solid var(--blue-mid);padding:11px 18px;border-radius:4px}
+  .panel a.btn:hover{background:var(--blue-light)}
+  .swatch{display:inline-block;width:14px;height:14px;background:#CCE4ED;border:1px solid var(--blue-mid);border-radius:3px;vertical-align:-2px;margin-right:6px}
   .empty{font-family:var(--mono);font-size:12px;color:var(--ink-mute);letter-spacing:.04em;padding:40px 0}
 
   @media(max-width:760px){
@@ -131,7 +134,8 @@
         </div>
 
         <div class="eyebrow" style="margin-top:34px">Your materials</div>
-        <p class="note">You'll get the <span class="code">Intern_Listing_Assets</span> folder. Everything in it is a copy, so edit freely.</p>
+        <p class="note">Everything you need is in one folder. It's all copies, so edit freely.</p>
+        <p><a class="btn" href="Intern_Listing_Assets.zip" download>Download assets (zip)</a></p>
         <ul class="rules">
           <li><span class="code">1_Current_Listing_Slides</span> · full-size versions of the three slides above</li>
           <li><span class="code">2_Demo_Video</span> · the demo that opens the listing</li>
@@ -147,6 +151,7 @@
           <li>Desktop views are the default. A mobile view is a good addition, since the widget works on phones</li>
           <li>Keep each image clear and focused on what the app does. One main idea per slide</li>
           <li>Use a solid background with strong contrast so text is easy to read</li>
+          <li>Our signature blue is <span class="swatch"></span><span class="code">#CCE4ED</span>. Use it as the anchor colour across the set</li>
           <li>Crop out browser bars, tabs and address bars</li>
           <li>No personal information about anyone, and no real customer data</li>
         </ul>
