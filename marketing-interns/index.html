@@ -54,6 +54,16 @@
   .tasks .t{font-family:var(--serif);font-size:20px}
   .tasks .d{font-size:14.5px;color:var(--ink-soft)}
   @media(max-width:760px){ .tasks li{grid-template-columns:34px 1fr} .tasks .d{grid-column:2} }
+  .slides{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:14px}
+  .slides figure{margin:0}
+  .slides img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:4px;border:1px solid var(--rule)}
+  .slides figcaption{font-family:var(--mono);font-size:11px;color:var(--ink-mute);letter-spacing:.04em;margin-top:8px}
+  @media(max-width:760px){ .slides{grid-template-columns:1fr} }
+  .rules{margin:12px 0 0;padding-left:20px;max-width:72ch}
+  .rules li{font-size:15px;color:var(--ink);padding:4px 0}
+  .note{font-size:15px;color:var(--ink-soft);max-width:72ch;margin:12px 0 0}
+  .code{font-family:var(--mono);font-size:12.5px;background:var(--off);padding:1px 6px;border-radius:3px}
+  .panel a{color:var(--blue-deep)}
   .empty{font-family:var(--mono);font-size:12px;color:var(--ink-mute);letter-spacing:.04em;padding:40px 0}
 
   @media(max-width:760px){
@@ -104,8 +114,65 @@
 
       <!-- ───── Week 2 ───── -->
       <section class="week" id="week-2">
-        <div class="week-head"><div class="eyebrow">Week 02</div><h2>Week 2</h2></div>
-        <p class="empty">Content coming soon.</p>
+        <div class="week-head"><div class="eyebrow">Week 02</div><h2>Shopify <em>listing images</em></h2></div>
+
+        <div class="brief">
+          <div class="eyebrow">The brief</div>
+          <p>Ask Ella is going onto the Shopify App Store. The listing is the first thing a merchant sees, and right now it has three placeholder slides. This week you're redesigning them.</p>
+          <p>Update these three slides and make them your own. Keep what works, rethink what doesn't. You're welcome to add more slides too.</p>
+          <p>The demo video in the folder will be the first thing in the listing, so your slides come after it. They should pick up where the video leaves off rather than repeat it.</p>
+        </div>
+
+        <div class="eyebrow" style="margin-top:34px">The current listing</div>
+        <div class="slides">
+          <figure><img src="week2-slide1.jpg" alt="Current slide 1: a 3D body scan beside a blazer, with garment details listed"><figcaption>Slide 1 · Anthropometry + garment intelligence</figcaption></figure>
+          <figure><img src="week2-slide2.jpg" alt="Current slide 2: three widget colour themes and button styles"><figcaption>Slide 2 · Tailored to your store</figcaption></figure>
+          <figure><img src="week2-slide3.jpg" alt="Current slide 3: the Ask Ella fit assistant open on a product page"><figcaption>Slide 3 · The fit assistant</figcaption></figure>
+        </div>
+
+        <div class="eyebrow" style="margin-top:34px">Your materials</div>
+        <p class="note">You'll get the <span class="code">Intern_Listing_Assets</span> folder. Everything in it is a copy, so edit freely.</p>
+        <ul class="rules">
+          <li><span class="code">1_Current_Listing_Slides</span> · full-size versions of the three slides above</li>
+          <li><span class="code">2_Demo_Video</span> · the demo that opens the listing</li>
+          <li><span class="code">3_Product_Screenshots</span> · widget screenshots and stills to build from</li>
+          <li><span class="code">4_Logos_and_Icons</span> · Anthrospecs logos and the app icon</li>
+          <li><span class="code">5_Other_Images</span> · extra imagery</li>
+        </ul>
+
+        <div class="eyebrow" style="margin-top:34px">Specs for the final images</div>
+        <ul class="rules">
+          <li>1600 × 900 px, 16:9, PNG or JPEG</li>
+          <li>3 to 6 slides in total, and at least one has to show the actual widget</li>
+          <li>Desktop views are the default. A mobile view is a good addition, since the widget works on phones</li>
+          <li>Keep each image clear and focused on what the app does. One main idea per slide</li>
+          <li>Use a solid background with strong contrast so text is easy to read</li>
+          <li>Crop out browser bars, tabs and address bars</li>
+          <li>No personal information about anyone, and no real customer data</li>
+        </ul>
+
+        <div class="eyebrow" style="margin-top:34px">Rules</div>
+        <ul class="rules">
+          <li>No exact figures or statistics (no percentages, no "X% fewer returns")</li>
+          <li>No bold claims or guarantees about results. Describe what the app does, not what it promises</li>
+          <li>No pricing and no reviews or testimonials</li>
+          <li>No Shopify logos</li>
+          <li>Don't show other brands' logos, including our pilot clients'. Use our own or made-up store names</li>
+          <li>Ask Ella is for womenswear right now, so don't feature menswear</li>
+          <li>Write alt text for every slide: one plain sentence saying what's in it</li>
+        </ul>
+        <p class="note">Full guidance: <a href="https://shopify.dev/docs/apps/launch/shopify-app-store/best-practices" target="_blank" rel="noopener">Shopify App Store best practices</a></p>
+
+        <div class="eyebrow" style="margin-top:34px">For reference</div>
+        <p class="note">Look at how <a href="https://apps.shopify.com/kiwi-sizing" target="_blank" rel="noopener">Kiwi Size Chart &amp; Recommender</a> lays out its listing: video first, then a set of screenshots, each with one short headline. Notice what each slide is trying to say.</p>
+
+        <div class="eyebrow" style="margin-top:34px">Deliverables</div>
+        <ol class="tasks">
+          <li><span class="t">Updated slides</span><span class="d">Your versions of the three slides, plus any you add, exported at 1600 × 900 px as PNG or JPEG.</span></li>
+          <li><span class="t">File names</span><span class="d">Name them in listing order: <span class="code">YourName_Slide1.png</span>, <span class="code">YourName_Slide2.png</span> and so on.</span></li>
+          <li><span class="t">Alt text</span><span class="d">One sentence per slide, in the body of the email, numbered to match.</span></li>
+          <li><span class="t">Send it in</span><span class="d">Email everything to <a href="mailto:amanda@anthrospecs.com">amanda@anthrospecs.com</a> before the next session, in the format above.</span></li>
+        </ol>
       </section>
 
       <!-- ───── Week 3 ───── -->
